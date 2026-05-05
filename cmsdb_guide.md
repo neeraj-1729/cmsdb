@@ -104,8 +104,8 @@ hh_ggf_htt_htt_kl1_kt1 = hh_ggf_kl1_kt1.add_process(
 | `vvvv_2lplus` | 4V → ≥2 charged leptons | 37.1% |
 | `vvvv_1l` | 4V → exactly 1 charged lepton | 38.6% |
 | `vvvv_0l` | 4V → 0 charged leptons + ≥6 jets | 23.8% |
-| `wwzz_veto_nunu_3l` | WWZZ (veto Z→νν) → 3 leptons | — |
-| `wwzz_veto_nunu_4lplus` | WWZZ (veto Z→νν) → ≥4 leptons | — |
+| `wwzz_veto_nunu_3l` | WWZZ (veto Z→νν) → 3 leptons | 6.2% of WWZZ |
+| `wwzz_veto_nunu_4lplus` | WWZZ (veto Z→νν) → ≥4 leptons | 2.5% of WWZZ |
 
 These filtered BRs are computed by enumerating individual decay modes (4W, 2W2Z, 4Z), following the official methodology from [genproductions PR #3537](https://github.com/cms-sw/genproductions/pull/3537). The intermediate variables use underscore prefix (`_br_4w_2l2nu4q`, etc.) to mark them as private.
 
