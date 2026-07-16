@@ -9,7 +9,7 @@ __all__ = [
     "data_tau", "data_met", "data_pho",
     "data_egamma", "data_muoneg", "data_jetht",
     "data_jethtmet", "data_doublemu", "data_vbf", "data_hh",
-    "data_mushower",
+    "data_muonshower",
 ]
 
 from order import Process
