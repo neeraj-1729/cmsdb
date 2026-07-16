@@ -13,9 +13,9 @@ from cmsdb.campaigns.run3_2025_nano_v15 import campaign_run3_2025_nano_v15 as cp
 #
 
 cpn.add_dataset(
-    name="data_jethtmet_b",
+    name="data_met_b",
     id=15310763,
-    processes=[procs.data_jethtmet],
+    processes=[procs.data_met],
     keys=[
         "/JetMET0/Run2025B-PromptReco-v1/NANOAOD",
         "/JetMET1/Run2025B-PromptReco-v1/NANOAOD",
@@ -29,9 +29,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="data_jethtmet_c",
+    name="data_met_c",
     id=15337395,
-    processes=[procs.data_jethtmet],
+    processes=[procs.data_met],
     keys=[
         "/JetMET0/Run2025C-PromptReco-v1/NANOAOD",
         "/JetMET1/Run2025C-PromptReco-v1/NANOAOD",
@@ -47,9 +47,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="data_jethtmet_d",
+    name="data_met_d",
     id=15369835,
-    processes=[procs.data_jethtmet],
+    processes=[procs.data_met],
     keys=[
         "/JetMET0/Run2025D-PromptReco-v1/NANOAOD",
         "/JetMET1/Run2025D-PromptReco-v1/NANOAOD",
@@ -63,9 +63,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="data_jethtmet_e",
+    name="data_met_e",
     id=15396830,
-    processes=[procs.data_jethtmet],
+    processes=[procs.data_met],
     keys=[
         "/JetMET0/Run2025E-PromptReco-v1/NANOAOD",
         "/JetMET1/Run2025E-PromptReco-v1/NANOAOD",
@@ -79,9 +79,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="data_jethtmet_f",
+    name="data_met_f",
     id=15419644,
-    processes=[procs.data_jethtmet],
+    processes=[procs.data_met],
     keys=[
         "/JetMET0/Run2025F-PromptReco-v1/NANOAOD",
         "/JetMET1/Run2025F-PromptReco-v1/NANOAOD",
@@ -97,9 +97,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="data_jethtmet_g",
+    name="data_met_g",
     id=15426626,
-    processes=[procs.data_jethtmet],
+    processes=[procs.data_met],
     keys=[
         "/JetMET0/Run2025G-PromptReco-v1/NANOAOD",
         "/JetMET1/Run2025G-PromptReco-v1/NANOAOD",
@@ -423,9 +423,9 @@ cpn.add_dataset(
 # EGamma datasets
 #
 cpn.add_dataset(
-    name="data_egamma_b",
+    name="data_e_b",
     id=15312679,
-    processes=[procs.data_egamma],
+    processes=[procs.data_e],
     keys=[
         "/EGamma0/Run2025B-PromptReco-v1/NANOAOD",
         "/EGamma1/Run2025B-PromptReco-v1/NANOAOD",
@@ -441,9 +441,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="data_egamma_c",
+    name="data_e_c",
     id=15336258,
-    processes=[procs.data_egamma],
+    processes=[procs.data_e],
     keys=[
         "/EGamma0/Run2025C-PromptReco-v1/NANOAOD",
         "/EGamma1/Run2025C-PromptReco-v1/NANOAOD",
@@ -463,9 +463,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="data_egamma_d",
+    name="data_e_d",
     id=15369930,
-    processes=[procs.data_egamma],
+    processes=[procs.data_e],
     keys=[
         "/EGamma0/Run2025D-PromptReco-v1/NANOAOD",
         "/EGamma1/Run2025D-PromptReco-v1/NANOAOD",
@@ -481,9 +481,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="data_egamma_e",
+    name="data_e_e",
     id=15396831,
-    processes=[procs.data_egamma],
+    processes=[procs.data_e],
     keys=[
         "/EGamma0/Run2025E-PromptReco-v1/NANOAOD",
         "/EGamma1/Run2025E-PromptReco-v1/NANOAOD",
@@ -499,9 +499,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="data_egamma_f",
+    name="data_e_f",
     id=15419718,
-    processes=[procs.data_egamma],
+    processes=[procs.data_e],
     keys=[
         "/EGamma0/Run2025F-PromptReco-v1/NANOAOD",
         "/EGamma1/Run2025F-PromptReco-v1/NANOAOD",
@@ -521,9 +521,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="data_egamma_g",
+    name="data_e_g",
     id=15426128,
-    processes=[procs.data_egamma],
+    processes=[procs.data_e],
     keys=[
         "/EGamma0/Run2025G-PromptReco-v1/NANOAOD",
         "/EGamma1/Run2025G-PromptReco-v1/NANOAOD",
