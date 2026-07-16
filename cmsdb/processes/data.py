@@ -83,8 +83,8 @@ data_doublemu = data.add_process(
     label=r"Data $\mu$",
 )
 
-data_mushower = data.add_process(
-    name="data_mushower",
+data_muonshower = data.add_process(
+    name="data_muonshower",
     id=90,
     is_data=True,
     label=r"Data $\mu$",
