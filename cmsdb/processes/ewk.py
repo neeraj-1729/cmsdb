@@ -2128,11 +2128,11 @@ vv = Process(
 #   13 TeV:   NNLO+NNLL = 16.518 ± 1.84% pb from https://journals.aps.org/prd/abstract/10.1103/2rr7-5xv3, table 1
 #   13.6 TeV: NNLO+NNLL = 17.627 ± 1.93% pb from the same paper, table 1
 # For the inclusive Pythia sample (ZZ_TuneCP5_13p6TeV_pythia8), XSDB lists 12.75 pb.
-# The order is not documented; assuming NLO and applying k=1.15 gives 14.6625 pb,
-# which is consistent with qqZZ-only at NNLO (the Pythia sample is qqZZ-dominated).
+# A second XSDB entry explicitly marks the order as LO (typical for Pythia-only samples).
+# Applying k=1.51 (LO→NNLO) gives 12.75 × 1.51 = 19.2525 pb.
 #
-# NOTE on k-factor: historically k=1.1 was used for NLO→NNLO scaling; we use k=1.15
-# as it is closer to the actual NLO→NNLO ratio from theory sources.
+# NOTE on k-factor: k=1.15 is used for NLO→NNLO (powheg/amcatnlo samples);
+# k=1.51 is used for LO→NNLO (Pythia-only/inclusive samples).
 # See Torben's slides: https://indico.cern.ch/event/1677270/contributions/7200886/attachments/3317393/5938464/ZZXS.pdf
 #
 # NOTE on per-decay-mode normalization: each dataset is normalized by its own
@@ -2158,9 +2158,8 @@ zz_qqbar = zz.add_process(
     id=8170,
     label=r"$q\bar{q} \rightarrow ZZ$",
     xsecs={
-        # XSDB inclusive (assumed NLO) × k=1.15 = 12.75 × 1.15 = 14.6625 pb
-        # this represents qqZZ only; consistent with NNLO theory after phase space effects
-        13.6: Number(14.6625),
+        # XSDB inclusive (LO, Pythia-only) × k=1.51 (LO→NNLO) = 12.75 × 1.51 = 19.2525 pb
+        13.6: Number(19.2525),
     },
 )
 
@@ -2169,7 +2168,7 @@ zz_zll_zll = zz_qqbar.add_process(
     id=8130,
     xsecs={
         # 13 TeV: NLO 1.256 pb × k=1.15 = 1.4444 pb (XSDB: ZZTo4L powheg)
-        # NOTE: for ZZTo4L amcatnlo, XSDB gives 1.5 pb × k=1.15 = 1.725 pb (NNLO+NNLL)
+        # NOTE: ZZTo4L amcatnlo is not on XSDB; CMS AN-19-191 gives 1.5 pb × k=1.15 = 1.725 pb (NNLO+NNLL)
         13: Number(1.4444),
         # 13.6 TeV: NLO 1.39 pb × k=1.15 = 1.5985 pb (XSDB: ZZto4L powheg)
         13.6: Number(1.5985),
