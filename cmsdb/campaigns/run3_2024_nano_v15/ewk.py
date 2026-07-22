@@ -975,6 +975,18 @@ cpn.add_dataset(
     n_events=1_999_273,
 )
 
+# same-sign WW
+cpn.add_dataset(
+    name="wpwp_jj_ewkqcd_madgraph",
+    id=15515111,
+    processes=[procs.wpwp_jj],
+    keys=[
+        "/WpWpJJ-EWK-QCD_TuneCP5_13p6TeV_madgraph-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa
+    ],
+    n_files=17,
+    n_events=243_119,
+)
+
 # further wz decay modes
 cpn.add_dataset(
     name="wz_wlnu_zll_powheg",
@@ -1156,6 +1168,21 @@ cpn.add_dataset(
     ],
     n_files=39,
     n_events=2_800_000,
+)
+
+#
+# V + gamma
+#
+
+cpn.add_dataset(
+    name="wg_lnug_amcatnlo",
+    id=15467536,
+    processes=[procs.wg_lnug],
+    keys=[
+        "/WGtoLNuG-1Jets_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa
+    ],
+    n_files=2_424,
+    n_events=445_891_677,
 )
 
 #

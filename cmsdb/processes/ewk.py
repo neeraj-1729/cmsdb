@@ -87,14 +87,16 @@ __all__ = [  # noqa: F822
     "ewk",
     "ewk_wp_lnu_m50toinf", "ewk_wm_lnu_m50toinf", "ewk_z_ll_m50toinf",
     "vv",
-    "zz",
+    "zz", "zz_qqbar", "zz_gg",
     "zz_zqq_zll", "zz_zll_znunu", "zz_zll_zll", "zz_zqq_zqq", "zz_znunu_zqq",
     "zz_zee_zee", "zz_zee_zmm", "zz_zee_ztt", "zz_zmm_zmm", "zz_zmm_ztt", "zz_ztt_ztt",
     "wz", "wz_wlnu_zll", "wz_wqq_zll", "wz_wqq_zqq", "wz_wlnu_zqq",
     "wzg", "wzg_wlnu",
+    "wg_lnug",
     "ww",
     "ww_dl", "ww_sl", "ww_fh",
     "ww_wenu_wenu", "ww_wenu_wmnu", "ww_wenu_wtnu", "ww_wmnu_wmnu", "ww_wmnu_wtnu", "ww_wtnu_wtnu",
+    "wpwp_jj",
     "vvv",
     "zzz", "wzz", "wwz", "www",
 ]
@@ -2121,84 +2123,166 @@ vv = Process(
     label="Di-Boson",
 )
 
-# ZZ 13 TeV xsec values at nNNLO from
+# ZZ
+# Theory inclusive XS (qqZZ + ggZZ):
+#   13 TeV:   NNLO+NNLL = 16.518 ± 1.84% pb from https://journals.aps.org/prd/abstract/10.1103/2rr7-5xv3, table 1
+#   13.6 TeV: NNLO+NNLL = 17.627 ± 1.93% pb from the same paper, table 1
+# For the inclusive Pythia sample (ZZ_TuneCP5_13p6TeV_pythia8), XSDB lists 12.75 pb.
+# The order is not documented; assuming NLO and applying k=1.15 gives 14.6625 pb,
+# which is consistent with qqZZ-only at NNLO (the Pythia sample is qqZZ-dominated).
+#
+# NOTE on k-factor: historically k=1.1 was used for NLO→NNLO scaling; we use k=1.15
+# as it is closer to the actual NLO→NNLO ratio from theory sources.
+# See Torben's slides: https://indico.cern.ch/event/1677270/contributions/7200886/attachments/3317393/5938464/ZZXS.pdf
+#
+# NOTE on per-decay-mode normalization: each dataset is normalized by its own
+# XSDB cross section (per decay mode) × k-factor. The per-decay-mode NLO values
+# from XSDB do NOT sum to the inclusive (they exceed it due to overlap / different
+# phase space cuts / EWK contributions at NLO enhancing leptonic modes).
+# If combining multiple ZZ decay-mode samples, stitching would be required.
 zz = vv.add_process(
     name="zz",
     id=8100,
     label="ZZ",
     xsecs={
-        # https://link.springer.com/article/10.1007/JHEP03(2019)070#preview, table 3, nNNLO
-        13: Number(24.97, {"scale": (0.029j, 0.027j)}),
-        # no theory prediction found yet, so take accurate value at 13 TeV and scale by the ratio
-        # of XSDB values at https://xsdb-temp.app.cern.ch/xsdb/?columns=67108863&currentPage=0&pageSize=40&searchQuery=process_name%3D%5EZZ_TuneCP5_13.%2Bpythia8%24  # noqa
-        13.6: Number(24.97, {"scale": (0.029j, 0.027j)}) * (12.75 / 12.14),
+        # NNLO+NNLL from https://journals.aps.org/prd/abstract/10.1103/2rr7-5xv3, table 1
+        13: Number(16.518, {"scale": 0.0184j}),
+        13.6: Number(17.627, {"scale": 0.0193j}),
     },
 )
 
-zz_zqq_zll = zz.add_process(
-    name="zz_zqq_zll",
-    id=8110,
-    xsecs=multiply_xsecs(zz, const.br_zz.llqq),
+# qqZZ: each decay mode normalized independently by its NLO XSDB value × k=1.15
+# NLO XS values from XSDB for individual powheg/amcatnlo samples
+zz_qqbar = zz.add_process(
+    name="zz_qqbar",
+    id=8170,
+    label=r"$q\bar{q} \rightarrow ZZ$",
+    xsecs={
+        # XSDB inclusive (assumed NLO) × k=1.15 = 12.75 × 1.15 = 14.6625 pb
+        # this represents qqZZ only; consistent with NNLO theory after phase space effects
+        13.6: Number(14.6625),
+    },
 )
 
-zz_zll_znunu = zz.add_process(
-    name="zz_zll_znunu",
-    id=8120,
-    xsecs=multiply_xsecs(zz, const.br_zz.llnunu),
-)
-
-zz_zll_zll = zz.add_process(
+zz_zll_zll = zz_qqbar.add_process(
     name="zz_zll_zll",
     id=8130,
-    xsecs=multiply_xsecs(zz, const.br_zz.llll),
+    xsecs={
+        # 13 TeV: NLO 1.256 pb × k=1.15 = 1.4444 pb (XSDB: ZZTo4L powheg)
+        # NOTE: for ZZTo4L amcatnlo, XSDB gives 1.5 pb × k=1.15 = 1.725 pb (NNLO+NNLL)
+        13: Number(1.4444),
+        # 13.6 TeV: NLO 1.39 pb × k=1.15 = 1.5985 pb (XSDB: ZZto4L powheg)
+        13.6: Number(1.5985),
+    },
 )
 
-zz_zqq_zqq = zz.add_process(
-    name="zz_zqq_zqq",
-    id=8140,
-    xsecs=multiply_xsecs(zz, const.br_zz.qqqq),
+zz_zqq_zll = zz_qqbar.add_process(
+    name="zz_zqq_zll",
+    id=8110,
+    xsecs={
+        # TODO: add 13 TeV value (NLO × k=1.15 from XSDB, same approach as 13.6 TeV)
+        # 13.6 TeV: NLO 6.788 pb × k=1.15 = 7.8062 pb (XSDB: ZZto2L2Q powheg)
+        13.6: Number(7.8062),
+    },
 )
 
-zz_znunu_zqq = zz.add_process(
+zz_zll_znunu = zz_qqbar.add_process(
+    name="zz_zll_znunu",
+    id=8120,
+    xsecs={
+        # TODO: add 13 TeV value (NLO × k=1.15 from XSDB, same approach as 13.6 TeV)
+        # 13.6 TeV: NLO 1.031 pb × k=1.15 = 1.18565 pb (XSDB: ZZto2L2Nu powheg)
+        13.6: Number(1.18565),
+    },
+)
+
+zz_znunu_zqq = zz_qqbar.add_process(
     name="zz_znunu_zqq",
     id=8150,
-    xsecs=multiply_xsecs(zz, const.br_zz.qqnunu),
+    xsecs={
+        # TODO: add 13 TeV value (NLO × k=1.15 from XSDB, same approach as 13.6 TeV)
+        # 13.6 TeV: NLO 4.826 pb × k=1.15 = 5.5499 pb (XSDB: ZZto2Nu2Q powheg)
+        13.6: Number(5.5499),
+    },
 )
 
-zz_zee_zee = zz.add_process(
+zz_zqq_zqq = zz_qqbar.add_process(
+    name="zz_zqq_zqq",
+    id=8140,
+    xsecs={
+        # TODO: add 13 TeV value (NLO × k=1.15 from XSDB, same approach as 13.6 TeV)
+        # 13.6 TeV: NLO 7.832 pb × k=1.15 = 9.0068 pb (XSDB: ZZto4Q amcatnlo)
+        13.6: Number(9.0068),
+    },
+)
+
+# ggZZ: each decay mode normalized independently by its LO MCFM value × k=1.7
+# LO XS values in fb from XSDB for individual mcfm samples
+# See slides: https://indico.cern.ch/event/1677270/contributions/7200886/attachments/3317393/5938464/ZZXS.pdf
+zz_gg = zz.add_process(
+    name="zz_gg",
+    id=8180,
+    label=r"$gg \rightarrow ZZ$",
+    xsecs={
+        # sum of ggZZ decay modes: 13 TeV: 3×2.703 + 3×5.423 = 24.378 fb
+        13: Number(24.378e-03),
+        # sum of ggZZ decay modes: 13.6 TeV: 3×5.199467 + 3×10.610669 = 47.430408 fb
+        13.6: Number(47.430408e-03),
+    },
+)
+
+zz_zee_zee = zz_gg.add_process(
     name="zz_zee_zee",
     id=8160,
-    xsecs=multiply_xsecs(zz, const.br_zz.eeee),
+    xsecs={
+        13: Number(2.703e-03),       # LO × k=1.7 (XSDB: GluGlu2Zto4E mcfm)
+        13.6: Number(5.199467e-03),  # LO × k=1.7 (XSDB: GluGlu2Zto4E mcfm)
+    },
 )
 
-zz_zee_zmm = zz.add_process(
+zz_zee_zmm = zz_gg.add_process(
     name="zz_zee_zmm",
     id=8161,
-    xsecs=multiply_xsecs(zz, const.br_zz.eemm),
+    xsecs={
+        13: Number(5.423e-03),        # LO × k=1.7 (XSDB: GluGlu2Zto2E2Mu mcfm)
+        13.6: Number(10.610669e-03),  # LO × k=1.7 (XSDB: GluGlu2Zto2E2Mu mcfm)
+    },
 )
 
-zz_zee_ztt = zz.add_process(
+zz_zee_ztt = zz_gg.add_process(
     name="zz_zee_ztt",
     id=8162,
-    xsecs=multiply_xsecs(zz, const.br_zz.eett),
+    xsecs={
+        13: Number(5.423e-03),        # LO × k=1.7 (XSDB: GluGlu2Zto2E2Tau mcfm)
+        13.6: Number(10.610669e-03),  # LO × k=1.7 (XSDB: GluGlu2Zto2E2Tau mcfm)
+    },
 )
 
-zz_zmm_zmm = zz.add_process(
+zz_zmm_zmm = zz_gg.add_process(
     name="zz_zmm_zmm",
     id=8163,
-    xsecs=multiply_xsecs(zz, const.br_zz.mmmm),
+    xsecs={
+        13: Number(2.703e-03),       # LO × k=1.7 (XSDB: GluGlu2Zto4Mu mcfm)
+        13.6: Number(5.199467e-03),  # LO × k=1.7 (XSDB: GluGlu2Zto4Mu mcfm)
+    },
 )
 
-zz_zmm_ztt = zz.add_process(
+zz_zmm_ztt = zz_gg.add_process(
     name="zz_zmm_ztt",
     id=8164,
-    xsecs=multiply_xsecs(zz, const.br_zz.mmtt),
+    xsecs={
+        13: Number(5.423e-03),        # LO × k=1.7 (XSDB: GluGlu2Zto2Mu2Tau mcfm)
+        13.6: Number(10.610669e-03),  # LO × k=1.7 (XSDB: GluGlu2Zto2Mu2Tau mcfm)
+    },
 )
 
-zz_ztt_ztt = zz.add_process(
+zz_ztt_ztt = zz_gg.add_process(
     name="zz_ztt_ztt",
     id=8165,
-    xsecs=multiply_xsecs(zz, const.br_zz.tttt),
+    xsecs={
+        13: Number(2.703e-03),       # LO × k=1.7 (XSDB: GluGlu2Zto4Tau mcfm)
+        13.6: Number(5.199467e-03),  # LO × k=1.7 (XSDB: GluGlu2Zto4Tau mcfm)
+    },
 )
 
 # WZ xsec values at NLO from https://arxiv.org/pdf/1105.0020.pdf v1
@@ -2273,6 +2357,19 @@ wzg_wlnu = wzg.add_process(
         # XSDB (Run3Summer22)
         13.6: Number(0.08425, {
             "tot": 4.238e-05,
+        }),
+    },
+)
+
+# w + photon
+wg_lnug = Process(
+    name="wg_lnug",
+    id=9600,
+    label=r"$W\gamma \rightarrow \ell\nu\gamma$",
+    xsecs={
+        # NLO from XSDB: https://xsecdb-xsdb-official.app.cern.ch/xsdb/?columns=67108863&currentPage=0&pageSize=40&searchQuery=process_name%3D%5EWGtoLNuG-1Jets_TuneCP5_13p6TeV  # noqa
+        13.6: Number(671.5, {
+            "tot": 0.7548,
         }),
     },
 )
@@ -2375,6 +2472,19 @@ ww_wtnu_wtnu = ww_dl.add_process(
     name="ww_wtnu_wtnu",
     id=8316,
     xsecs=multiply_xsecs(ww, const.br_ww.tnutnu),
+)
+
+# same-sign WW (EWK+QCD)
+wpwp_jj = Process(
+    name="wpwp_jj",
+    id=8400,
+    label=r"$W^{\pm}W^{\pm}jj$",
+    xsecs={
+        # LO from XSDB: https://xsecdb-xsdb-official.app.cern.ch/xsdb/?columns=67108863&currentPage=0&pageSize=40&searchQuery=process_name%3D%5EWpWpJJ-EWK-QCD_TuneCP5_13p6TeV  # noqa
+        13.6: Number(0.0587, {
+            "tot": 0.00001523,
+        }),
+    },
 )
 
 #
