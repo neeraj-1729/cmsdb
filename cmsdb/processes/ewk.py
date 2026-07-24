@@ -2158,7 +2158,7 @@ zz_qqbar = zz.add_process(
     id=8170,
     label=r"$q\bar{q} \rightarrow ZZ$",
     xsecs={
-        #XSDB inclusive (LO, Pythia-only) × k=1.51 (LO→NNLO) = 12.14 × 1.51 = 18.3314 pb
+        # XSDB inclusive (LO, Pythia-only) × k=1.51 (LO→NNLO) = 12.14 × 1.51 = 18.3314 pb
         # https://xsecdb-xsdb-official.app.cern.ch/xsdb/?columns=67108863&currentPage=0&pageSize=10&searchQuery=DAS%3DZZ_TuneCP5_13TeV-pythia8
         13: Number(18.3314),
         # XSDB inclusive (LO, Pythia-only) × k=1.51 (LO→NNLO) = 12.75 × 1.51 = 19.2525 pb
@@ -2204,7 +2204,8 @@ zz_zll_znunu = zz_qqbar.add_process(
         # GenXSecAnalyzer After filter: 0.9738 ± 0.001 pb × k=1.15 = 1.1199 pb
         # (sanity: 1.120 pb at 13 TeV < 1.186 pb at 13.6 TeV → ~5.5% energy scaling ✓)
         # NOTE (Torben): the Autumn18 sample (RunIIAutumn18MiniAOD, gridpack v1 with mll > 40 GeV) gives 0.6008 pb —
-        # a different phase space; treat as ZZTo2L2Nu_mll40 if needed. The UL value (0.9738 pb, mll > 4 GeV) is used here.
+        # a different phase space; treat as ZZTo2L2Nu_mll40 if needed.
+        # The UL value (0.9738 pb, mll > 4 GeV) is used here.
         13: Number(0.9738, {"tot": 0.001}) * 1.15,
         # 13.6 TeV: NLO 1.031 pb × k=1.15 = 1.18565 pb (XSDB: ZZto2L2Nu powheg)
         13.6: Number(1.18565),
