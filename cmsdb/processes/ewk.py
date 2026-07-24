@@ -2158,6 +2158,9 @@ zz_qqbar = zz.add_process(
     id=8170,
     label=r"$q\bar{q} \rightarrow ZZ$",
     xsecs={
+        #XSDB inclusive (LO, Pythia-only) × k=1.51 (LO→NNLO) = 12.14 × 1.51 = 18.3314 pb
+        # https://xsecdb-xsdb-official.app.cern.ch/xsdb/?columns=67108863&currentPage=0&pageSize=10&searchQuery=DAS%3DZZ_TuneCP5_13TeV-pythia8
+        13: Number(18.3314),
         # XSDB inclusive (LO, Pythia-only) × k=1.51 (LO→NNLO) = 12.75 × 1.51 = 19.2525 pb
         13.6: Number(19.2525),
     },
@@ -2179,7 +2182,13 @@ zz_zqq_zll = zz_qqbar.add_process(
     name="zz_zqq_zll",
     id=8110,
     xsecs={
-        # TODO: add 13 TeV value (NLO × k=1.15 from XSDB, same approach as 13.6 TeV)
+        # 13 TeV: NLO from GenXSecAnalyzer on UL18 MiniAODv2 (1M events) × k=1.15 (NLO→NNLO)
+        # Sample: ZZTo2Q2L_mllmin4p0_TuneCP5_13TeV-amcatnloFXFX-pythia8 (amcatnloFXFX → NLO)
+        # Torben confirmed: XSDB "LO" label is misleading; generator is NLO (amcatnloFXFX)
+        # GenXSecAnalyzer After filter: 3.698 ± 0.004 pb × k=1.15 = 4.253 pb
+        # (consistent with XSDB value 3.676 pb for same sample)
+        # NOTE: 13 TeV sample has mllmin4p0 cut; 13.6 TeV uses powheg without this cut — different phase space
+        13: Number(3.698, {"tot": 0.004}) * 1.15,
         # 13.6 TeV: NLO 6.788 pb × k=1.15 = 7.8062 pb (XSDB: ZZto2L2Q powheg)
         13.6: Number(7.8062),
     },
@@ -2189,7 +2198,14 @@ zz_zll_znunu = zz_qqbar.add_process(
     name="zz_zll_znunu",
     id=8120,
     xsecs={
-        # TODO: add 13 TeV value (NLO × k=1.15 from XSDB, same approach as 13.6 TeV)
+        # 13 TeV: NLO from GenXSecAnalyzer on UL18 MiniAODv2 (1M events) × k=1.15 (NLO→NNLO)
+        # Sample: ZZTo2L2Nu_TuneCP5_13TeV_powheg_pythia8/RunIISummer20UL18MiniAODv2 (Powheg NLO, ~0% neg. weights)
+        # Gridpack: ZZ_slc7_amd64_gcc820_CMSSW_11_0_1_ZZ2L2Nu.tgz (UL v2, mll > 4 GeV)
+        # GenXSecAnalyzer After filter: 0.9738 ± 0.001 pb × k=1.15 = 1.1199 pb
+        # (sanity: 1.120 pb at 13 TeV < 1.186 pb at 13.6 TeV → ~5.5% energy scaling ✓)
+        # NOTE (Torben): the Autumn18 sample (RunIIAutumn18MiniAOD, gridpack v1 with mll > 40 GeV) gives 0.6008 pb —
+        # a different phase space; treat as ZZTo2L2Nu_mll40 if needed. The UL value (0.9738 pb, mll > 4 GeV) is used here.
+        13: Number(0.9738, {"tot": 0.001}) * 1.15,
         # 13.6 TeV: NLO 1.031 pb × k=1.15 = 1.18565 pb (XSDB: ZZto2L2Nu powheg)
         13.6: Number(1.18565),
     },
@@ -2199,7 +2215,12 @@ zz_znunu_zqq = zz_qqbar.add_process(
     name="zz_znunu_zqq",
     id=8150,
     xsecs={
-        # TODO: add 13 TeV value (NLO × k=1.15 from XSDB, same approach as 13.6 TeV)
+        # 13 TeV: NLO from GenXSecAnalyzer on UL18 MiniAODv2 (1M events) × k=1.15 (NLO→NNLO)
+        # Sample: ZZTo2Q2Nu_TuneCP5_13TeV-amcatnloFXFX-pythia8 (ZZTo2Q2Nu01j_5f_NLO_FXFX gridpack → amcatnloFXFX)
+        # Torben confirmed: XSDB "LO" label is misleading; generator is NLO (amcatnloFXFX)
+        # GenXSecAnalyzer After filter: 4.487 ± 0.008 pb × k=1.15 = 5.160 pb
+        # (sanity check: 5.160 pb at 13 TeV < 5.5499 pb at 13.6 TeV — physically consistent)
+        13: Number(4.487, {"tot": 0.008}) * 1.15,
         # 13.6 TeV: NLO 4.826 pb × k=1.15 = 5.5499 pb (XSDB: ZZto2Nu2Q powheg)
         13.6: Number(5.5499),
     },
@@ -2209,7 +2230,14 @@ zz_zqq_zqq = zz_qqbar.add_process(
     name="zz_zqq_zqq",
     id=8140,
     xsecs={
-        # TODO: add 13 TeV value (NLO × k=1.15 from XSDB, same approach as 13.6 TeV)
+        # 13 TeV: NLO from XSDB × k=1.15 (NLO→NNLO)
+        # Sample: ZZTo4Q_13TeV_amcatnloFXFX_madspin_pythia8
+        # https://xsecdb-xsdb-official.app.cern.ch/xsdb/?columns=67108863&currentPage=0&pageSize=40&searchQuery=process_name%3D%5EZZTo4Q_13TeV_amcatnloFXFX_madspin_pythia8
+        # XSDB NLO: 6.912 pb × k=1.15 = 7.9488 pb
+        # NOTE: GenXSecAnalyzer on ZZTo4Q_5f (no madspin) gives only 3.305 pb — different generator setup,
+        # likely a mass cut difference (Torben). The madspin sample is consistent with the 13.6 TeV setup.
+        # (sanity: 7.949 pb at 13 TeV < 9.007 pb at 13.6 TeV → ~12% energy scaling ✓)
+        13: Number(6.912) * 1.15,
         # 13.6 TeV: NLO 7.832 pb × k=1.15 = 9.0068 pb (XSDB: ZZto4Q amcatnlo)
         13.6: Number(9.0068),
     },
@@ -2284,7 +2312,7 @@ zz_ztt_ztt = zz_gg.add_process(
     },
 )
 
-# WZ xsec values at NLO from https://arxiv.org/pdf/1105.0020.pdf v1
+# WZ inclusive NLO xsec values from https://arxiv.org/pdf/1105.0020.pdf v1
 wp_z_xsec = {
     13: Number(28.55, {"scale": (0.041j, 0.032j)}),
 }
@@ -2311,10 +2339,24 @@ wz = vv.add_process(
     },
 )
 
+# WZto3LNu cross sections for the powheg decay-mode sample (W->lnu, Z->ll).
+# Each decay mode is normalized independently by its XSDB NLO value × k-factor (NNLO QCD x NLO EW).
+# k-factor is between NNLO QCD x NLO EW (MATRIX) and NLO POWHEG (not NLO MATRIX).
+# MATRIX paper: https://arxiv.org/abs/1912.00068
 wz_wlnu_zll = wz.add_process(
     name="wz_wlnu_zll",
     id=8210,
-    xsecs=multiply_xsecs(wz, const.br_w.lep * const.br_z.clep),
+    xsecs={
+        # XSDB NLO (powheg) 4.42965 pb × k=1.19 (NLO POWHEG -> NNLO QCD x NLO EW) = 5.2713 pb
+        # https://twiki.cern.ch/twiki/bin/view/CMS/SummaryTable1G25ns#Diboson (NLO: 4.42965 pb)
+        # https://xsecdb-xsdb-official.app.cern.ch/xsdb/?columns=67108863&currentPage=0&pageSize=10&searchQuery=DAS=WZto3LNu_TuneCUETP8M1_13TeV-powheg-pythia8  # noqa
+        # k-factor ~1.19 from WZ Run2 paper: https://arxiv.org/pdf/2110.11231
+        13: Number(5.2713),
+        # XSDB NLO (powheg) 4.924 pb × k=1.08 (NLO POWHEG -> NNLO QCD x NLO EW) = 5.31792 pb
+        # https://xsecdb-xsdb-official.app.cern.ch/xsdb/?columns=67108863&currentPage=0&pageSize=10&searchQuery=DAS=WZto3LNu_TuneCP5_13p6TeV_powheg-pythia8  # noqa
+        # k-factor ~1.08 from WZ Run3 paper: https://arxiv.org/pdf/2412.02477
+        13.6: Number(5.31792),
+    },
 )
 
 wz_wqq_zll = wz.add_process(
