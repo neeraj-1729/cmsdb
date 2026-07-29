@@ -2363,25 +2363,48 @@ wz_wlnu_zll = wz.add_process(
 wz_wqq_zll = wz.add_process(
     name="wz_wqq_zll",
     id=8220,
-    xsecs=multiply_xsecs(wz, const.br_w.had * const.br_z.clep),
+    xsecs={
+        13: multiply_xsecs(wz, const.br_w.had * const.br_z.clep)[13],
+        # XSDB NLO (powheg) 7.568 pb × k=1.08 (NLO POWHEG -> NNLO QCD x NLO EW) = 8.17344 pb
+        # https://xsecdb-xsdb-official.app.cern.ch/xsdb/ DAS=WZto2L2Q_TuneCP5_13p6TeV_powheg-pythia8
+        # verified from CMS AN-2023/179
+        # k-factor ~1.08 from WZ Run3 paper: https://arxiv.org/pdf/2412.02477
+        # MATRIX paper: https://arxiv.org/abs/1912.00068
+        13.6: Number(8.17344),
+    },
 )
 
 wz_wqq_zqq = wz.add_process(
     name="wz_wqq_zqq",
     id=8240,
-    xsecs=multiply_xsecs(wz, const.br_w.had * const.br_z.qq),
+    xsecs={
+        13: multiply_xsecs(wz, const.br_w.had * const.br_z.qq)[13],
+        # XSDB labels this as "LO" but it is actually NLO (amcatnloFXFX = NLO + FxFx jet merging):
+        #   - 21% negative weights (impossible at LO)
+        #   - FxFx matching efficiency ~63% (before: 39.31 pb, after: 24.97 pb)
+        # https://xsecdb-xsdb-official.app.cern.ch/xsdb/ DAS=WZto4Q-1Jets-4FS_TuneCP5_13p6TeV_amcatnloFXFX-pythia8
+        # GenXSecAnalyzer (Run3Summer22EEMiniAODv4, 1M events): 24.97 ± 0.03314 pb (after matching)
+        # NLO (amcatnlo) 24.97 pb × k=1.08 (NLO -> NNLO QCD x NLO EW) = 26.9676 pb
+        # k-factor ~1.08 from WZ Run3 paper: https://arxiv.org/pdf/2412.02477
+        # MATRIX paper: https://arxiv.org/abs/1912.00068
+        13.6: Number(26.9676),
+    },
 )
 
-# no additional cut found in generator card in MCM:
-# dataset: /WZTo1L1Nu2Q_4f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v2/MINIAODSIM  # noqa
-# therefore, value obtained from branching ratio.
-# Log for GenXSecAnalyzer of
-# for WZTo1L1Nu2Q_4f_TuneCP5_13TeV-amcatnloFXFX-pythia8 (Summer20UL16, NLO) -> value : Number(9.159, {"tot": 0.008259})
-# also available, but not used here
+# GenXSecAnalyzer of WZTo1L1Nu2Q_4f_TuneCP5_13TeV-amcatnloFXFX-pythia8 (Summer20UL16, NLO)
+# -> value: Number(9.159, {"tot": 0.008259}), also available but not used for 13 TeV
 wz_wlnu_zqq = wz.add_process(
     name="wz_wlnu_zqq",
     id=8230,
-    xsecs=multiply_xsecs(wz, const.br_w.lep * const.br_z.qq),
+    xsecs={
+        13: multiply_xsecs(wz, const.br_w.lep * const.br_z.qq)[13],
+        # XSDB NLO (powheg) 15.87 pb × k=1.08 (NLO POWHEG -> NNLO QCD x NLO EW) = 17.1396 pb
+        # https://xsecdb-xsdb-official.app.cern.ch/xsdb/ DAS=WZtoLNu2Q_TuneCP5_13p6TeV_powheg-pythia8
+        # GenXSecAnalyzer (Run3Summer22EEMiniAODv4, 1M events): 15.87 ± 0.007874 pb — exact match with XSDB
+        # k-factor ~1.08 from WZ Run3 paper: https://arxiv.org/pdf/2412.02477
+        # MATRIX paper: https://arxiv.org/abs/1912.00068
+        13.6: Number(17.1396),
+    },
 )
 
 # wz + photon
