@@ -2363,7 +2363,7 @@ azh_htt_zll_a2100_h1100 = azh_htt_zll.add_process(
     label=rf"{azh_htt_zll.label} ($m_A = 2100$ GeV, $m_H = 1100$ GeV)",
     id=1000168,
     xsecs={
-        13: Number(0.1),
+        13: Number(0.01),
         13.6: Number(0.01),
     },
 )
