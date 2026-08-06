@@ -784,7 +784,54 @@ cpn.add_dataset(
 # Z boson production (non-DY)
 #
 
-# tba
+#
+# Z boson production (non-DY)
+#
+
+cpn.add_dataset(
+    name="z_qq_pt100toinf_amcatnlo",
+    id=15405746,
+    processes=[procs.z_qq_pt100toinf],
+    keys=[
+        "/Zto2Q-2Jets_Bin-PTQQ-100_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa
+    ],
+    n_files=2_061,
+    n_events=329_141_942,
+)
+
+cpn.add_dataset(
+    name="z_qq_pt200toinf_amcatnlo",
+    id=15408443,
+    processes=[procs.z_qq_pt200toinf],
+    keys=[
+        "/Zto2Q-2Jets_Bin-PTQQ-200_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa
+    ],
+    n_files=591,
+    n_events=70_295_226,
+)
+
+cpn.add_dataset(
+    name="z_qq_pt400toinf_amcatnlo",
+    id=15407802,
+    processes=[procs.z_qq_pt400toinf],
+    keys=[
+        "/Zto2Q-2Jets_Bin-PTQQ-400_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa
+    ],
+    n_files=488,
+    n_events=53_736_414,
+)
+
+cpn.add_dataset(
+    name="z_qq_pt600toinf_amcatnlo",
+    id=15407760,
+    processes=[procs.z_qq_pt600toinf],
+    keys=[
+        "/Zto2Q-2Jets_Bin-PTQQ-600_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa
+    ],
+    n_files=400,
+    n_events=50_519_215,
+)
+
 
 #
 # W/Z VBF production
