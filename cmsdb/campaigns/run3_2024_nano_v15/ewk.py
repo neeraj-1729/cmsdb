@@ -871,7 +871,7 @@ cpn.add_dataset(
     n_events=4_800_000,
 )
 
-# further ww decay modes
+# qqWW decay modes (Powheg NLO)
 cpn.add_dataset(
     name="ww_dl_powheg",
     id=15304453,
@@ -905,7 +905,7 @@ cpn.add_dataset(
     n_events=151_214_029,
 )
 
-# further ww decay modes with specific leptons
+# ggWW dilepton decay modes (MCFM LO)
 cpn.add_dataset(
     name="ww_wenu_wenu_pythia",
     id=15349213,

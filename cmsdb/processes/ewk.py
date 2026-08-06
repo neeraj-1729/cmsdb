@@ -93,7 +93,7 @@ __all__ = [  # noqa: F822
     "wz", "wz_wlnu_zll", "wz_wqq_zll", "wz_wqq_zqq", "wz_wlnu_zqq",
     "wzg", "wzg_wlnu",
     "wg_lnug",
-    "ww",
+    "ww", "ww_qqbar", "ww_gg",
     "ww_dl", "ww_sl", "ww_fh",
     "ww_wenu_wenu", "ww_wenu_wmnu", "ww_wenu_wtnu", "ww_wmnu_wmnu", "ww_wmnu_wtnu", "ww_wtnu_wtnu",
     "wpwp_jj",
@@ -2441,7 +2441,18 @@ wg_lnug = Process(
 
 # NNLO QCD from https://twiki.cern.ch/twiki/bin/view/CMS/StandardModelCrossSectionsat13TeV?rev=28
 # itself from https://arxiv.org/pdf/1408.5243.pdf v1
-
+#
+# 13.6 TeV: WW_TuneCP5_13p6TeV_pythia8 is LO Pythia (WeakDoubleBoson:ffbar2WW, qq only).
+# McM fragment: BTV-Run3Summer22GS-00015, crossSection = 75.8 (hardcoded LO).
+# GenXSecAnalyzer: 80.22 pb (LO). XSDB: 80.23 pb.
+# k(LO→NNLO) ≈ 1.75 from Grazzini et al., JHEP 08 (2016) 140 [arXiv:1605.02716], Table 2:
+#   13 TeV: NNLO/LO = 1370.9/778.99 = 1.76
+#
+# NOTE on WW k-factors:
+#   qqWW: k=1.14 (NLO→NNLO) from arXiv:1605.02716 (Grazzini et al., JHEP 08 (2016) 140)
+#   ggWW: k=1.41 (LO→NLO) from arXiv:1511.08617 (Caola et al., Phys. Lett. B 754 (2016) 275)
+#   LO→NNLO (Pythia inclusive): k≈1.75 from the same Grazzini et al. paper
+#
 # old value before update:
 # https://cms.cern.ch/iCMS/jsp/db_notes/noteInfo.jsp?cmsnoteid=CMS%20AN-2019/197 (v3) Number(75.91) (LO)
 ww = vv.add_process(
@@ -2450,10 +2461,9 @@ ww = vv.add_process(
     label="WW",
     xsecs={
         13: Number(118.7, {"scale": (0.025j, 0.022j)}),
-        # 13.6 from GenXSecAnalyzer:
-        13.6: Number(80.22, {
-            "tot": 0.01677,  # xsdb: Number(80.23, {"tot": 0.3733})
-        }),
+        # 13.6: LO Pythia GenXSecAnalyzer × k(LO→NNLO) ≈ 1.75
+        # 80.22 × 1.75 = 140.385 pb
+        13.6: Number(80.22, {"tot": 0.01677}) * 1.75,
     },
 )
 
@@ -2461,82 +2471,145 @@ ww = vv.add_process(
 for cme in [13]:
     vv.set_xsec(cme, ww.get_xsec(cme) + wz.get_xsec(cme) + zz.get_xsec(cme))
 
+# qqWW: each decay mode normalized independently by its NLO XSDB value × k=1.14
+# NLO XS values from XSDB for individual Powheg samples (WWto2L2Nu, WWtoLNu2Q, WWto4Q)
+# k=1.14 (NLO→NNLO) from arXiv:1605.02716 (Grazzini et al., JHEP 08 (2016) 140)
+ww_qqbar = ww.add_process(
+    name="ww_qqbar",
+    id=8370,
+    label=r"$q\bar{q} \rightarrow WW$",
+    xsecs={
+        13: ww.get_xsec(13),  # at 13 TeV, qqWW ≈ inclusive (ggWW is small)
+        # 13.6: sum of Powheg NLO decay modes × k=1.14
+        # dl: 11.79 × 1.14 = 13.4406, sl: 48.94 × 1.14 = 55.7916, fh: 50.79 × 1.14 = 57.9006
+        # sum = 127.1328 pb
+        13.6: Number(127.1328),
+    },
+)
+
 # no additional cut found in generator card:
 # https://raw.githubusercontent.com/cms-sw/genproductions/master/bin/Powheg/production/2017/13TeV/WWTo2L2Nu_NNPDF31nnlo_13TeV/WWTo2L2Nu_NNPDF31nnlo_13TeV.input  # noqa
-# therefore, value obtained from branching ratio.
+# therefore, 13 TeV value obtained from branching ratio.
 # Log for GenXSecAnalyzer of
 # WWTo2L2Nu_TuneCP5_13TeV-powheg-pythia8 (Summer20UL16, NLO) with Number(11.09, {"tot": 0.00704})
 # also available, but not used here
-ww_dl = ww.add_process(
+ww_dl = ww_qqbar.add_process(
     name="ww_dl",
     id=8310,
     xsecs={
         13: ww.get_xsec(13) * const.br_ww.dl,  # value around 12.6 for comparison to GenXSecAnalyzer NLO result
+        # 13.6: XSDB NLO 11.79 pb × k=1.14 (NLO→NNLO) = 13.4406 pb
+        13.6: Number(11.79, {"tot": 0.004216}) * 1.14,
     },
 )
 
 # no additional cut found in generator card in MCM:
 # dataset: /WWTo1L1Nu2Q_4f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v2/MINIAODSIM  # noqa
-# therefore, value obtained from branching ratio.
+# therefore, 13 TeV value obtained from branching ratio.
 # Log for GenXSecAnalyzer of
 # for WWTo1L1Nu2Q_4f_TuneCP5_13TeV-amcatnloFXFX-pythia8 (Summer20UL16, NLO) -> value : Number(50.94, {"tot": 0.042})
 # also available, but not used here
-ww_sl = ww.add_process(
+ww_sl = ww_qqbar.add_process(
     name="ww_sl",
     id=8320,
     xsecs={
         13: ww.get_xsec(13) * const.br_ww.sl,  # value around 50.06 for comparison to GenXSecAnalyzer NLO result
+        # 13.6: XSDB NLO 48.94 pb × k=1.14 (NLO→NNLO) = 55.7916 pb
+        13.6: Number(48.94, {"tot": 0.0175}) * 1.14,
     },
 )
 
 # no additional cut found in generator card in MCM:
 # dataset: /WWTo4Q_4f_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16MiniAODv2-106X_mcRun2_asymptotic_v17-v3/MINIAODSIM  # noqa
-# therefore, value obtained from branching ratio.
+# therefore, 13 TeV value obtained from branching ratio.
 # Log for GenXSecAnalyzer of
 # for WWTo4Q_4f_TuneCP5_13TeV-amcatnloFXFX-pythia8 (Summer20UL16, NLO) -> value : Number(51.53, {"tot": 0.04349})
 # also available, but not used here
-ww_fh = ww.add_process(
+ww_fh = ww_qqbar.add_process(
     name="ww_fh",
     id=8330,
     xsecs={
         13: ww.get_xsec(13) * const.br_ww.fh,  # value around 53.94 for comparison to GenXSecAnalyzer NLO result
+        # 13.6: XSDB NLO 50.79 pb × k=1.14 (NLO→NNLO) = 57.9006 pb
+        13.6: Number(50.79, {"tot": 0.01816}) * 1.14,
     },
 )
 
-ww_wenu_wenu = ww_dl.add_process(
+# ggWW: each decay mode normalized independently by its LO MCFM value × k=1.41
+# LO XS values in fb from XSDB for individual mcfm samples (XSDB mistakenly lists as pb; MCFM outputs in fb)
+# k=1.41 (LO→NLO) from arXiv:1511.08617 (Caola et al., Phys. Lett. B 754 (2016) 275)
+# See also CMS AN-2023/179.
+#
+# NOTE on same-flavor vs different-flavor:
+# MCFM gridpacks give the same XS (49.63 fb) for all channels (per-sample).
+# Same-flavor (ee, μμ, ττ): 1 sample per pair → XS = 49.63 fb × k
+# Different-flavor (eμ, eτ, μτ): 2 samples per pair (e.g., ENuMuNu + MuNuENu) → XS = 2 × 49.63 fb × k
+# Total ggWW→2l2ν = 3×69.9783 + 3×139.9566 = 629.8047 fb
+ww_gg = ww.add_process(
+    name="ww_gg",
+    id=8380,
+    label=r"$gg \rightarrow WW$",
+    xsecs={
+        # sum of ggWW decay modes: 13.6 TeV: 3×69.9783 + 3×139.9566 = 629.8047 fb
+        13.6: Number(629.8047e-03),
+    },
+)
+
+# same-flavor channels: 49.63 fb × k=1.41 = 69.9783 fb each
+ww_wenu_wenu = ww_gg.add_process(
     name="ww_wenu_wenu",
     id=8311,
-    xsecs=multiply_xsecs(ww, const.br_ww.enuenu),
+    xsecs={
+        13: ww.get_xsec(13) * const.br_ww.enuenu,
+        13.6: Number(49.63e-03) * 1.41,  # LO MCFM 49.63 fb × k=1.41 (same-flavor, 1 sample)
+    },
 )
 
-ww_wenu_wmnu = ww_dl.add_process(
+# different-flavor channels: 2 × 49.63 fb × k=1.41 = 139.9566 fb each
+# factor 2 from combining two ordering samples (ENuMuNu + MuNuENu)
+ww_wenu_wmnu = ww_gg.add_process(
     name="ww_wenu_wmnu",
     id=8312,
-    xsecs=multiply_xsecs(ww, const.br_ww.enumnu),
+    xsecs={
+        13: ww.get_xsec(13) * const.br_ww.enumnu,
+        13.6: Number(2 * 49.63e-03) * 1.41,  # LO MCFM 2×49.63 fb × k=1.41 (different-flavor, 2 samples)
+    },
 )
 
-ww_wenu_wtnu = ww_dl.add_process(
+ww_wenu_wtnu = ww_gg.add_process(
     name="ww_wenu_wtnu",
     id=8313,
-    xsecs=multiply_xsecs(ww, const.br_ww.enutnu),
+    xsecs={
+        13: ww.get_xsec(13) * const.br_ww.enutnu,
+        13.6: Number(2 * 49.63e-03) * 1.41,  # LO MCFM 2×49.63 fb × k=1.41 (different-flavor, 2 samples)
+    },
 )
 
-ww_wmnu_wmnu = ww_dl.add_process(
+ww_wmnu_wmnu = ww_gg.add_process(
     name="ww_wmnu_wmnu",
     id=8314,
-    xsecs=multiply_xsecs(ww, const.br_ww.mnumnu),
+    xsecs={
+        13: ww.get_xsec(13) * const.br_ww.mnumnu,
+        13.6: Number(49.63e-03) * 1.41,  # LO MCFM 49.63 fb × k=1.41 (same-flavor, 1 sample)
+    },
 )
 
-ww_wmnu_wtnu = ww_dl.add_process(
+ww_wmnu_wtnu = ww_gg.add_process(
     name="ww_wmnu_wtnu",
     id=8315,
-    xsecs=multiply_xsecs(ww, const.br_ww.mnutnu),
+    xsecs={
+        13: ww.get_xsec(13) * const.br_ww.mnutnu,
+        13.6: Number(2 * 49.63e-03) * 1.41,  # LO MCFM 2×49.63 fb × k=1.41 (different-flavor, 2 samples)
+    },
 )
 
-ww_wtnu_wtnu = ww_dl.add_process(
+ww_wtnu_wtnu = ww_gg.add_process(
     name="ww_wtnu_wtnu",
     id=8316,
-    xsecs=multiply_xsecs(ww, const.br_ww.tnutnu),
+    xsecs={
+        13: ww.get_xsec(13) * const.br_ww.tnutnu,
+        13.6: Number(49.63e-03) * 1.41,  # LO MCFM 49.63 fb × k=1.41 (same-flavor, 1 sample)
+    },
 )
 
 # same-sign WW (EWK+QCD)
