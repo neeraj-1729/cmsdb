@@ -315,6 +315,22 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
+    name="ttwz_madgraph",
+    id=15515311,
+    processes=[procs.ttwz],
+    keys=[
+        "/TTWZ_TuneCP5_13p6TeV_madgraph-pythia8/Run3Summer22MiniAODv4_NanoAODv14UHH-130X_mcRun3_2022_realistic_v5-v2/NANOAODSIM",  # noqa
+    ],
+    n_files=2,
+    n_events=400_000,
+    aux={
+        "merging_factors": {
+            "nominal": 9,
+        },
+    },
+)
+
+cpn.add_dataset(
     name="ttzz_madgraph",
     id=14796051,
     processes=[procs.ttzz],
