@@ -580,16 +580,16 @@ cpn.add_dataset(
 
 cpn.add_dataset(
     name="z_vbf_zll_m50toinf_madgraph",
-    id=15016452,
+    id=15535539,
     processes=[procs.z_vbf_zll_m50toinf],
     keys=[
-        "/VBFto2L_MLL-50_TuneCP5_13p6TeV_madgraph-pythia8/Run3Summer23MiniAODv4_NanoAODv14UHH-130X_mcRun3_2023_realistic_v15_ext1-v2/NANOAODSIM",  # noqa
+        "/VBFto2L_MLL-50_TuneCP5_13p6TeV_madgraph-pythia8/Run3Summer23MiniAODv4_NanoAODv14UHH-130X_mcRun3_2023_realistic_v15_ext1-v3/NANOAODSIM",  # noqa
     ],
     n_files=10,
-    n_events=6_880_000,
+    n_events=6_900_000,
     aux={
         "merging_factors": {
-            "nominal": 18,
+            "nominal": 20,
         },
     },
 )
