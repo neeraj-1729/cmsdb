@@ -159,16 +159,16 @@ cpn.add_dataset(
 
 cpn.add_dataset(
     name="hh_ggf_hbb_hvvqqlnu_kl1_kt1_powheg",
-    id=14854289,
+    id=14960760,
     processes=[procs.hh_ggf_hbb_hvvqqlnu_kl1_kt1],
     keys=[
-        "/GluGlutoHHto2B2WtoLNu2Q_kl-1p00_kt-1p00_c2-0p00_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer23BPixMiniAODv4_NanoAODv14UHH-130X_mcRun3_2023_realistic_postBPix_v2-v2/NANOAODSIM",  # noqa
+        "/GluGlutoHHto2B2WtoLNu2Q_kl-1p00_kt-1p00_c2-0p00_TuneCP5_13p6TeV_powheg-pythia8/Run3Summer23BPixMiniAODv4_NanoAODv14UHH-130X_mcRun3_2023_realistic_postBPix_v6-v2/NANOAODSIM",  # noqa
     ],
-    n_files=2,
-    n_events=495_374,
+    n_files=1,
+    n_events=133_053,
     aux={
         "merging_factors": {
-            "nominal": 30,
+            "nominal": 27,
         },
     },
 )
