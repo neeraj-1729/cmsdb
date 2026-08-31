@@ -261,7 +261,7 @@ cpn.add_dataset(
 #
 
 cpn.add_dataset(
-    name="thq_ctcvcp_madgraph",
+    name="thq_4f_madgraph",
     id=15537100,
     processes=[procs.thq],
     keys=[
@@ -272,7 +272,7 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="thw_ctcvcp_madgraph",
+    name="thw_madgraph",
     id=15539363,
     processes=[procs.thw],
     keys=[

@@ -93,7 +93,12 @@ __all__ = [  # noqa: F822
     "zz_zee_zee", "zz_zee_zmm", "zz_zee_ztt", "zz_zmm_zmm", "zz_zmm_ztt", "zz_ztt_ztt",
     "wz", "wz_wlnu_zll", "wz_wqq_zll", "wz_wqq_zqq", "wz_wlnu_zqq",
     "wzg", "wzg_wlnu",
-    "wg_lnug",
+    "wg_wlnu",
+    "dyg",
+    "dyg_m50toinf", "dyg_m50toinf_ptg10to100", "dyg_m50toinf_ptg100to200",
+    "dyg_m50toinf_ptg200to400", "dyg_m50toinf_ptg400to600", "dyg_m50toinf_ptg600toinf",
+    "dyg_m50toinf_ptg100toinf", "dyg_m50toinf_ptg200toinf", "dyg_m50toinf_ptg400toinf",
+    "dyg_m4to50", "dyg_m4to50_ptg10to100", "dyg_m4to50_ptg100to200", "dyg_m4to50_ptg200toinf",
     "ww", "ww_qqbar", "ww_gg",
     "ww_dl", "ww_sl", "ww_fh",
     "ww_wenu_wenu", "ww_wenu_wmnu", "ww_wenu_wtnu", "ww_wmnu_wmnu", "ww_wmnu_wtnu", "ww_wtnu_wtnu",
@@ -2233,6 +2238,14 @@ vv = Process(
 # from XSDB do NOT sum to the inclusive (they exceed it due to overlap / different
 # phase space cuts / EWK contributions at NLO enhancing leptonic modes).
 # If combining multiple ZZ decay-mode samples, stitching would be required.
+
+# k-factors for ZZ
+# See Torben's slides: https://indico.cern.ch/event/1677270/contributions/7200886/attachments/3317393/5938464/ZZXS.pdf
+zz_k_nlo_to_nnlo = 1.15   # NLO→NNLO (powheg/amcatnlo samples)
+zz_k_lo_to_nnlo = 1.51    # LO→NNLO (Pythia-only/inclusive samples)
+# ggZZ: k=1.7 (LO MCFM → NLO) from the same slides
+zz_gg_k_lo_to_nlo = 1.7
+
 zz = vv.add_process(
     name="zz",
     id=8100,
@@ -2251,11 +2264,11 @@ zz_qqbar = zz.add_process(
     id=8170,
     label=r"$q\bar{q} \rightarrow ZZ$",
     xsecs={
-        # XSDB inclusive (LO, Pythia-only) × k=1.51 (LO→NNLO) = 12.14 × 1.51 = 18.3314 pb
+        # XSDB inclusive (LO, Pythia-only) × k(LO→NNLO)
         # https://xsecdb-xsdb-official.app.cern.ch/xsdb/?columns=67108863&currentPage=0&pageSize=10&searchQuery=DAS%3DZZ_TuneCP5_13TeV-pythia8
-        13: Number(18.3314),
-        # XSDB inclusive (LO, Pythia-only) × k=1.51 (LO→NNLO) = 12.75 × 1.51 = 19.2525 pb
-        13.6: Number(19.2525),
+        13: Number(12.14) * zz_k_lo_to_nnlo,
+        # XSDB inclusive (LO, Pythia-only) × k(LO→NNLO)
+        13.6: Number(12.75) * zz_k_lo_to_nnlo,
     },
 )
 
@@ -2263,11 +2276,11 @@ zz_zll_zll = zz_qqbar.add_process(
     name="zz_zll_zll",
     id=8130,
     xsecs={
-        # 13 TeV: NLO 1.256 pb × k=1.15 = 1.4444 pb (XSDB: ZZTo4L powheg)
+        # 13 TeV: XSDB NLO 1.256 pb (ZZTo4L powheg) × k(NLO→NNLO)
         # NOTE: ZZTo4L amcatnlo is not on XSDB; CMS AN-19-191 gives 1.5 pb × k=1.15 = 1.725 pb (NNLO+NNLL)
-        13: Number(1.4444),
-        # 13.6 TeV: NLO 1.39 pb × k=1.15 = 1.5985 pb (XSDB: ZZto4L powheg)
-        13.6: Number(1.5985),
+        13: Number(1.256) * zz_k_nlo_to_nnlo,
+        # 13.6 TeV: XSDB NLO 1.39 pb (ZZto4L powheg) × k(NLO→NNLO)
+        13.6: Number(1.39) * zz_k_nlo_to_nnlo,
     },
 )
 
@@ -2281,9 +2294,9 @@ zz_zqq_zll = zz_qqbar.add_process(
         # GenXSecAnalyzer After filter: 3.698 ± 0.004 pb × k=1.15 = 4.253 pb
         # (consistent with XSDB value 3.676 pb for same sample)
         # NOTE: 13 TeV sample has mllmin4p0 cut; 13.6 TeV uses powheg without this cut — different phase space
-        13: Number(3.698, {"tot": 0.004}) * 1.15,
-        # 13.6 TeV: NLO 6.788 pb × k=1.15 = 7.8062 pb (XSDB: ZZto2L2Q powheg)
-        13.6: Number(7.8062),
+        13: Number(3.698, {"tot": 0.004}) * zz_k_nlo_to_nnlo,
+        # 13.6 TeV: XSDB NLO 6.788 pb (ZZto2L2Q powheg) × k(NLO→NNLO)
+        13.6: Number(6.788) * zz_k_nlo_to_nnlo,
     },
 )
 
@@ -2299,9 +2312,9 @@ zz_zll_znunu = zz_qqbar.add_process(
         # NOTE (Torben): the Autumn18 sample (RunIIAutumn18MiniAOD, gridpack v1 with mll > 40 GeV) gives 0.6008 pb —
         # a different phase space; treat as ZZTo2L2Nu_mll40 if needed.
         # The UL value (0.9738 pb, mll > 4 GeV) is used here.
-        13: Number(0.9738, {"tot": 0.001}) * 1.15,
-        # 13.6 TeV: NLO 1.031 pb × k=1.15 = 1.18565 pb (XSDB: ZZto2L2Nu powheg)
-        13.6: Number(1.18565),
+        13: Number(0.9738, {"tot": 0.001}) * zz_k_nlo_to_nnlo,
+        # 13.6 TeV: XSDB NLO 1.031 pb (ZZto2L2Nu powheg) × k(NLO→NNLO)
+        13.6: Number(1.031) * zz_k_nlo_to_nnlo,
     },
 )
 
@@ -2314,9 +2327,9 @@ zz_znunu_zqq = zz_qqbar.add_process(
         # Torben confirmed: XSDB "LO" label is misleading; generator is NLO (amcatnloFXFX)
         # GenXSecAnalyzer After filter: 4.487 ± 0.008 pb × k=1.15 = 5.160 pb
         # (sanity check: 5.160 pb at 13 TeV < 5.5499 pb at 13.6 TeV — physically consistent)
-        13: Number(4.487, {"tot": 0.008}) * 1.15,
-        # 13.6 TeV: NLO 4.826 pb × k=1.15 = 5.5499 pb (XSDB: ZZto2Nu2Q powheg)
-        13.6: Number(5.5499),
+        13: Number(4.487, {"tot": 0.008}) * zz_k_nlo_to_nnlo,
+        # 13.6 TeV: XSDB NLO 4.826 pb (ZZto2Nu2Q powheg) × k(NLO→NNLO)
+        13.6: Number(4.826) * zz_k_nlo_to_nnlo,
     },
 )
 
@@ -2327,28 +2340,40 @@ zz_zqq_zqq = zz_qqbar.add_process(
         # 13 TeV: NLO from XSDB × k=1.15 (NLO→NNLO)
         # Sample: ZZTo4Q_13TeV_amcatnloFXFX_madspin_pythia8
         # https://xsecdb-xsdb-official.app.cern.ch/xsdb/?columns=67108863&currentPage=0&pageSize=40&searchQuery=process_name%3D%5EZZTo4Q_13TeV_amcatnloFXFX_madspin_pythia8
-        # XSDB NLO: 6.912 pb × k=1.15 = 7.9488 pb
+        # XSDB NLO: 6.912 pb × k(NLO→NNLO)
         # NOTE: GenXSecAnalyzer on ZZTo4Q_5f (no madspin) gives only 3.305 pb — different generator setup,
         # likely a mass cut difference (Torben). The madspin sample is consistent with the 13.6 TeV setup.
-        # (sanity: 7.949 pb at 13 TeV < 9.007 pb at 13.6 TeV → ~12% energy scaling ✓)
-        13: Number(6.912) * 1.15,
-        # 13.6 TeV: NLO 7.832 pb × k=1.15 = 9.0068 pb (XSDB: ZZto4Q amcatnlo)
-        13.6: Number(9.0068),
+        # (sanity: 6.912×k at 13 TeV < 7.832×k at 13.6 TeV → ~12% energy scaling ✓)
+        13: Number(6.912) * zz_k_nlo_to_nnlo,
+        # 13.6 TeV: XSDB NLO 7.832 pb (ZZto4Q amcatnlo) × k(NLO→NNLO)
+        13.6: Number(7.832) * zz_k_nlo_to_nnlo,
     },
 )
 
 # ggZZ: each decay mode normalized independently by its LO MCFM value × k=1.7
 # LO XS values in fb from XSDB for individual mcfm samples
 # See slides: https://indico.cern.ch/event/1677270/contributions/7200886/attachments/3317393/5938464/ZZXS.pdf
+#
+# Same-flavor modes (4e, 4μ, 4τ) have the same XSDB LO value;
+# different-flavor modes (2e2μ, 2e2τ, 2μ2τ) also share a common value.
+# Store these as variables to avoid repetition and make the origin clear.
+
+# XSDB LO values (in fb) for same-flavor ggZZ modes (GluGlu2Zto4L mcfm)
+gg_zz_lo_same_13 = Number(2.703e-03)    # GluGlu2Zto4E / 4Mu / 4Tau, 13 TeV
+gg_zz_lo_same_13p6 = Number(5.199467e-03)  # GluGlu2Zto4E / 4Mu / 4Tau, 13.6 TeV
+
+# XSDB LO values (in fb) for different-flavor ggZZ modes (GluGlu2Zto2L2L' mcfm)
+gg_zz_lo_diff_13 = Number(5.423e-03)       # GluGlu2Zto2E2Mu / 2E2Tau / 2Mu2Tau, 13 TeV
+gg_zz_lo_diff_13p6 = Number(10.610669e-03)  # GluGlu2Zto2E2Mu / 2E2Tau / 2Mu2Tau, 13.6 TeV
+
 zz_gg = zz.add_process(
     name="zz_gg",
     id=8180,
     label=r"$gg \rightarrow ZZ$",
     xsecs={
-        # sum of ggZZ decay modes: 13 TeV: 3×2.703 + 3×5.423 = 24.378 fb
-        13: Number(24.378e-03),
-        # sum of ggZZ decay modes: 13.6 TeV: 3×5.199467 + 3×10.610669 = 47.430408 fb
-        13.6: Number(47.430408e-03),
+        # sum of ggZZ decay modes: 3 same-flavor + 3 different-flavor
+        13: (gg_zz_lo_same_13 + gg_zz_lo_diff_13) * const.n_leps,
+        13.6: (gg_zz_lo_same_13p6 + gg_zz_lo_diff_13p6) * const.n_leps,
     },
 )
 
@@ -2356,8 +2381,8 @@ zz_zee_zee = zz_gg.add_process(
     name="zz_zee_zee",
     id=8160,
     xsecs={
-        13: Number(2.703e-03),       # LO × k=1.7 (XSDB: GluGlu2Zto4E mcfm)
-        13.6: Number(5.199467e-03),  # LO × k=1.7 (XSDB: GluGlu2Zto4E mcfm)
+        13: gg_zz_lo_same_13,
+        13.6: gg_zz_lo_same_13p6,
     },
 )
 
@@ -2365,8 +2390,8 @@ zz_zee_zmm = zz_gg.add_process(
     name="zz_zee_zmm",
     id=8161,
     xsecs={
-        13: Number(5.423e-03),        # LO × k=1.7 (XSDB: GluGlu2Zto2E2Mu mcfm)
-        13.6: Number(10.610669e-03),  # LO × k=1.7 (XSDB: GluGlu2Zto2E2Mu mcfm)
+        13: gg_zz_lo_diff_13,
+        13.6: gg_zz_lo_diff_13p6,
     },
 )
 
@@ -2374,8 +2399,8 @@ zz_zee_ztt = zz_gg.add_process(
     name="zz_zee_ztt",
     id=8162,
     xsecs={
-        13: Number(5.423e-03),        # LO × k=1.7 (XSDB: GluGlu2Zto2E2Tau mcfm)
-        13.6: Number(10.610669e-03),  # LO × k=1.7 (XSDB: GluGlu2Zto2E2Tau mcfm)
+        13: gg_zz_lo_diff_13,
+        13.6: gg_zz_lo_diff_13p6,
     },
 )
 
@@ -2383,8 +2408,8 @@ zz_zmm_zmm = zz_gg.add_process(
     name="zz_zmm_zmm",
     id=8163,
     xsecs={
-        13: Number(2.703e-03),       # LO × k=1.7 (XSDB: GluGlu2Zto4Mu mcfm)
-        13.6: Number(5.199467e-03),  # LO × k=1.7 (XSDB: GluGlu2Zto4Mu mcfm)
+        13: gg_zz_lo_same_13,
+        13.6: gg_zz_lo_same_13p6,
     },
 )
 
@@ -2392,8 +2417,8 @@ zz_zmm_ztt = zz_gg.add_process(
     name="zz_zmm_ztt",
     id=8164,
     xsecs={
-        13: Number(5.423e-03),        # LO × k=1.7 (XSDB: GluGlu2Zto2Mu2Tau mcfm)
-        13.6: Number(10.610669e-03),  # LO × k=1.7 (XSDB: GluGlu2Zto2Mu2Tau mcfm)
+        13: gg_zz_lo_diff_13,
+        13.6: gg_zz_lo_diff_13p6,
     },
 )
 
@@ -2401,8 +2426,8 @@ zz_ztt_ztt = zz_gg.add_process(
     name="zz_ztt_ztt",
     id=8165,
     xsecs={
-        13: Number(2.703e-03),       # LO × k=1.7 (XSDB: GluGlu2Zto4Tau mcfm)
-        13.6: Number(5.199467e-03),  # LO × k=1.7 (XSDB: GluGlu2Zto4Tau mcfm)
+        13: gg_zz_lo_same_13,
+        13.6: gg_zz_lo_same_13p6,
     },
 )
 
@@ -2437,19 +2462,21 @@ wz = vv.add_process(
 # Each decay mode is normalized independently by its XSDB NLO value × k-factor (NNLO QCD x NLO EW).
 # k-factor is between NNLO QCD x NLO EW (MATRIX) and NLO POWHEG (not NLO MATRIX).
 # MATRIX paper: https://arxiv.org/abs/1912.00068
+
+# k-factors for WZ decay modes (NLO POWHEG -> NNLO QCD x NLO EW)
+wz_k_run2 = 1.19  # from WZ Run2 paper: https://arxiv.org/pdf/2110.11231
+wz_k_run3 = 1.08  # from WZ Run3 paper: https://arxiv.org/pdf/2412.02477
 wz_wlnu_zll = wz.add_process(
     name="wz_wlnu_zll",
     id=8210,
     xsecs={
-        # XSDB NLO (powheg) 4.42965 pb × k=1.19 (NLO POWHEG -> NNLO QCD x NLO EW) = 5.2713 pb
+        # XSDB NLO (powheg) 4.42965 pb × k(NLO POWHEG -> NNLO QCD x NLO EW)
         # https://twiki.cern.ch/twiki/bin/view/CMS/SummaryTable1G25ns#Diboson (NLO: 4.42965 pb)
         # https://xsecdb-xsdb-official.app.cern.ch/xsdb/?columns=67108863&currentPage=0&pageSize=10&searchQuery=DAS=WZto3LNu_TuneCUETP8M1_13TeV-powheg-pythia8  # noqa
-        # k-factor ~1.19 from WZ Run2 paper: https://arxiv.org/pdf/2110.11231
-        13: Number(5.2713),
-        # XSDB NLO (powheg) 4.924 pb × k=1.08 (NLO POWHEG -> NNLO QCD x NLO EW) = 5.31792 pb
+        13: Number(4.42965) * wz_k_run2,
+        # XSDB NLO (powheg) 4.924 pb × k(NLO POWHEG -> NNLO QCD x NLO EW)
         # https://xsecdb-xsdb-official.app.cern.ch/xsdb/?columns=67108863&currentPage=0&pageSize=10&searchQuery=DAS=WZto3LNu_TuneCP5_13p6TeV_powheg-pythia8  # noqa
-        # k-factor ~1.08 from WZ Run3 paper: https://arxiv.org/pdf/2412.02477
-        13.6: Number(5.31792),
+        13.6: Number(4.924) * wz_k_run3,
     },
 )
 
@@ -2458,12 +2485,11 @@ wz_wqq_zll = wz.add_process(
     id=8220,
     xsecs={
         13: multiply_xsecs(wz, const.br_w.had * const.br_z.clep)[13],
-        # XSDB NLO (powheg) 7.568 pb × k=1.08 (NLO POWHEG -> NNLO QCD x NLO EW) = 8.17344 pb
+        # XSDB NLO (powheg) 7.568 pb × k(NLO POWHEG -> NNLO QCD x NLO EW)
         # https://xsecdb-xsdb-official.app.cern.ch/xsdb/ DAS=WZto2L2Q_TuneCP5_13p6TeV_powheg-pythia8
         # verified from CMS AN-2023/179
-        # k-factor ~1.08 from WZ Run3 paper: https://arxiv.org/pdf/2412.02477
         # MATRIX paper: https://arxiv.org/abs/1912.00068
-        13.6: Number(8.17344),
+        13.6: Number(7.568) * wz_k_run3,
     },
 )
 
@@ -2477,10 +2503,9 @@ wz_wqq_zqq = wz.add_process(
         #   - FxFx matching efficiency ~63% (before: 39.31 pb, after: 24.97 pb)
         # https://xsecdb-xsdb-official.app.cern.ch/xsdb/ DAS=WZto4Q-1Jets-4FS_TuneCP5_13p6TeV_amcatnloFXFX-pythia8
         # GenXSecAnalyzer (Run3Summer22EEMiniAODv4, 1M events): 24.97 ± 0.03314 pb (after matching)
-        # NLO (amcatnlo) 24.97 pb × k=1.08 (NLO -> NNLO QCD x NLO EW) = 26.9676 pb
-        # k-factor ~1.08 from WZ Run3 paper: https://arxiv.org/pdf/2412.02477
+        # NLO (amcatnlo) 24.97 pb × k(NLO -> NNLO QCD x NLO EW)
         # MATRIX paper: https://arxiv.org/abs/1912.00068
-        13.6: Number(26.9676),
+        13.6: Number(24.97, {"tot": 0.03314}) * wz_k_run3,
     },
 )
 
@@ -2491,12 +2516,11 @@ wz_wlnu_zqq = wz.add_process(
     id=8230,
     xsecs={
         13: multiply_xsecs(wz, const.br_w.lep * const.br_z.qq)[13],
-        # XSDB NLO (powheg) 15.87 pb × k=1.08 (NLO POWHEG -> NNLO QCD x NLO EW) = 17.1396 pb
+        # XSDB NLO (powheg) 15.87 pb × k(NLO POWHEG -> NNLO QCD x NLO EW)
         # https://xsecdb-xsdb-official.app.cern.ch/xsdb/ DAS=WZtoLNu2Q_TuneCP5_13p6TeV_powheg-pythia8
         # GenXSecAnalyzer (Run3Summer22EEMiniAODv4, 1M events): 15.87 ± 0.007874 pb — exact match with XSDB
-        # k-factor ~1.08 from WZ Run3 paper: https://arxiv.org/pdf/2412.02477
         # MATRIX paper: https://arxiv.org/abs/1912.00068
-        13.6: Number(17.1396),
+        13.6: Number(15.87, {"tot": 0.007874}) * wz_k_run3,
     },
 )
 
@@ -2520,8 +2544,8 @@ wzg_wlnu = wzg.add_process(
 )
 
 # w + photon
-wg_lnug = Process(
-    name="wg_lnug",
+wg_wlnu = Process(
+    name="wg_wlnu",
     id=9600,
     label=r"$W\gamma \rightarrow \ell\nu\gamma$",
     xsecs={
@@ -2529,6 +2553,217 @@ wg_lnug = Process(
         13.6: Number(671.5, {
             "tot": 0.7548,
         }),
+    },
+)
+
+# DY + photon (Zγ)
+# Run 3 naming: DYGto2LG-1Jets (was ZGTo2LG in Run 2)
+# NLO cross sections from XSDB for inclusive samples
+# LO cross sections from XSDB for PTG-binned samples (bounded bins, 2022/2023)
+# NLO cross sections from XSDB for PTG-binned samples (open thresholds, 2024 Bin- convention)
+
+dyg = Process(
+    name="dyg",
+    id=9700,
+    label=r"DY+$\gamma$",
+)
+
+dyg_m50toinf = dyg.add_process(
+    name="dyg_m50toinf",
+    id=9710,
+    label=r"DY+$\gamma$ ($m_{\ell\ell} \geq 50$)",
+    xsecs={
+        # NLO from XSDB: DYGto2LG-1Jets_MLL-50_TuneCP5_13p6TeV_amcatnloFXFX-pythia8
+        13.6: Number(127.0, {
+            "tot": 0.1484,
+        }),
+    },
+    aux={
+        "mll": (50.0, const.inf),
+    },
+)
+
+# bounded PTG bins (used in 2022/2023 campaigns)
+
+dyg_m50toinf_ptg10to100 = dyg_m50toinf.add_process(
+    name="dyg_m50toinf_ptg10to100",
+    id=9711,
+    xsecs={
+        # LO from XSDB
+        13.6: Number(126.6, {
+            "tot": 0.4287,
+        }),
+    },
+    aux={
+        "mll": (50.0, const.inf),
+        "ptg": (10.0, 100.0),
+    },
+)
+
+dyg_m50toinf_ptg100to200 = dyg_m50toinf.add_process(
+    name="dyg_m50toinf_ptg100to200",
+    id=9712,
+    xsecs={
+        # LO from XSDB
+        13.6: Number(0.3493, {
+            "tot": 0.001778,
+        }),
+    },
+    aux={
+        "mll": (50.0, const.inf),
+        "ptg": (100.0, 200.0),
+    },
+)
+
+dyg_m50toinf_ptg200to400 = dyg_m50toinf.add_process(
+    name="dyg_m50toinf_ptg200to400",
+    id=9713,
+    xsecs={
+        # LO from XSDB
+        13.6: Number(0.04331, {
+            "tot": 0.000221,
+        }),
+    },
+    aux={
+        "mll": (50.0, const.inf),
+        "ptg": (200.0, 400.0),
+    },
+)
+
+dyg_m50toinf_ptg400to600 = dyg_m50toinf.add_process(
+    name="dyg_m50toinf_ptg400to600",
+    id=9714,
+    xsecs={
+        # LO from XSDB
+        13.6: Number(0.00313, {
+            "tot": 0.00001539,
+        }),
+    },
+    aux={
+        "mll": (50.0, const.inf),
+        "ptg": (400.0, 600.0),
+    },
+)
+
+dyg_m50toinf_ptg600toinf = dyg_m50toinf.add_process(
+    name="dyg_m50toinf_ptg600toinf",
+    id=9715,
+    xsecs={
+        # LO from XSDB
+        13.6: Number(0.0006528, {
+            "tot": 0.000002983,
+        }),
+    },
+    aux={
+        "mll": (50.0, const.inf),
+        "ptg": (600.0, const.inf),
+    },
+)
+
+# open-threshold PTG bins (used in 2024 Bin- convention)
+
+dyg_m50toinf_ptg100toinf = dyg_m50toinf.add_process(
+    name="dyg_m50toinf_ptg100toinf",
+    id=9716,
+    xsecs={
+        # NLO from XSDB: DYGto2LG-1Jets_Bin-MLL-50-PTG-100
+        13.6: Number(0.3942, {
+            "tot": 0.0007196,
+        }),
+    },
+    aux={
+        "mll": (50.0, const.inf),
+        "ptg": (100.0, const.inf),
+    },
+)
+
+dyg_m50toinf_ptg200toinf = dyg_m50toinf.add_process(
+    name="dyg_m50toinf_ptg200toinf",
+    id=9717,
+    xsecs={
+        # NLO from XSDB: DYGto2LG-1Jets_Bin-MLL-50-PTG-200
+        13.6: Number(0.04738, {
+            "tot": 0.00008731,
+        }),
+    },
+    aux={
+        "mll": (50.0, const.inf),
+        "ptg": (200.0, const.inf),
+    },
+)
+
+dyg_m50toinf_ptg400toinf = dyg_m50toinf.add_process(
+    name="dyg_m50toinf_ptg400toinf",
+    id=9718,
+    xsecs={
+        # NLO from XSDB: DYGto2LG-1Jets_Bin-MLL-50-PTG-400
+        13.6: Number(0.003741, {
+            "tot": 0.00002272,
+        }),
+    },
+    aux={
+        "mll": (50.0, const.inf),
+        "ptg": (400.0, const.inf),
+    },
+)
+
+dyg_m4to50 = dyg.add_process(
+    name="dyg_m4to50",
+    id=9720,
+    label=r"DY+$\gamma$ ($4 \leq m_{\ell\ell} < 50$)",
+    xsecs={
+        # NLO from XSDB: DYGto2LG-1Jets_Bin-MLL-4to50 (2024)
+        13.6: Number(88.13, {
+            "tot": 0.09618,
+        }),
+    },
+    aux={
+        "mll": (4.0, 50.0),
+    },
+)
+
+dyg_m4to50_ptg10to100 = dyg_m4to50.add_process(
+    name="dyg_m4to50_ptg10to100",
+    id=9721,
+    xsecs={
+        # LO from XSDB
+        13.6: Number(88.17, {
+            "tot": 0.2807,
+        }),
+    },
+    aux={
+        "mll": (4.0, 50.0),
+        "ptg": (10.0, 100.0),
+    },
+)
+
+dyg_m4to50_ptg100to200 = dyg_m4to50.add_process(
+    name="dyg_m4to50_ptg100to200",
+    id=9722,
+    xsecs={
+        # LO from XSDB
+        13.6: Number(0.2413, {
+            "tot": 0.001249,
+        }),
+    },
+    aux={
+        "mll": (4.0, 50.0),
+        "ptg": (100.0, 200.0),
+    },
+)
+
+dyg_m4to50_ptg200toinf = dyg_m4to50.add_process(
+    name="dyg_m4to50_ptg200toinf",
+    id=9723,
+    xsecs={
+        # LO from XSDB
+        13.6: Number(0.02224, {
+            "tot": 0.0001052,
+        }),
+    },
+    aux={
+        "mll": (4.0, 50.0),
+        "ptg": (200.0, const.inf),
     },
 )
 
@@ -2541,22 +2776,22 @@ wg_lnug = Process(
 # k(LO→NNLO) ≈ 1.75 from Grazzini et al., JHEP 08 (2016) 140 [arXiv:1605.02716], Table 2:
 #   13 TeV: NNLO/LO = 1370.9/778.99 = 1.76
 #
-# NOTE on WW k-factors:
+# k-factors for WW
 #   qqWW: k=1.14 (NLO→NNLO) from arXiv:1605.02716 (Grazzini et al., JHEP 08 (2016) 140)
 #   ggWW: k=1.41 (LO→NLO) from arXiv:1511.08617 (Caola et al., Phys. Lett. B 754 (2016) 275)
 #   LO→NNLO (Pythia inclusive): k≈1.75 from the same Grazzini et al. paper
-#
-# old value before update:
-# https://cms.cern.ch/iCMS/jsp/db_notes/noteInfo.jsp?cmsnoteid=CMS%20AN-2019/197 (v3) Number(75.91) (LO)
+ww_k_lo_to_nnlo = 1.75    # LO→NNLO (Pythia inclusive)
+ww_k_nlo_to_nnlo = 1.14   # qqWW: NLO→NNLO
+ww_gg_k_lo_to_nlo = 1.41  # ggWW: LO MCFM → NLO
+
 ww = vv.add_process(
     name="ww",
     id=8300,
     label="WW",
     xsecs={
         13: Number(118.7, {"scale": (0.025j, 0.022j)}),
-        # 13.6: LO Pythia GenXSecAnalyzer × k(LO→NNLO) ≈ 1.75
-        # 80.22 × 1.75 = 140.385 pb
-        13.6: Number(80.22, {"tot": 0.01677}) * 1.75,
+        # 13.6: LO Pythia GenXSecAnalyzer × k(LO→NNLO)
+        13.6: Number(80.22, {"tot": 0.01677}) * ww_k_lo_to_nnlo,
     },
 )
 
@@ -2564,19 +2799,22 @@ ww = vv.add_process(
 for cme in [13]:
     vv.set_xsec(cme, ww.get_xsec(cme) + wz.get_xsec(cme) + zz.get_xsec(cme))
 
-# qqWW: each decay mode normalized independently by its NLO XSDB value × k=1.14
+# qqWW: each decay mode normalized independently by its NLO XSDB value × k(NLO→NNLO)
 # NLO XS values from XSDB for individual Powheg samples (WWto2L2Nu, WWtoLNu2Q, WWto4Q)
-# k=1.14 (NLO→NNLO) from arXiv:1605.02716 (Grazzini et al., JHEP 08 (2016) 140)
+
+# XSDB NLO values (pb) for individual qqWW decay modes at 13.6 TeV
+ww_dl_nlo_13p6 = Number(11.79, {"tot": 0.004216})
+ww_sl_nlo_13p6 = Number(48.94, {"tot": 0.0175})
+ww_fh_nlo_13p6 = Number(50.79, {"tot": 0.01816})
+
 ww_qqbar = ww.add_process(
     name="ww_qqbar",
     id=8370,
     label=r"$q\bar{q} \rightarrow WW$",
     xsecs={
         13: ww.get_xsec(13),  # at 13 TeV, qqWW ≈ inclusive (ggWW is small)
-        # 13.6: sum of Powheg NLO decay modes × k=1.14
-        # dl: 11.79 × 1.14 = 13.4406, sl: 48.94 × 1.14 = 55.7916, fh: 50.79 × 1.14 = 57.9006
-        # sum = 127.1328 pb
-        13.6: Number(127.1328),
+        # 13.6: sum of Powheg NLO decay modes × k(NLO→NNLO)
+        13.6: (ww_dl_nlo_13p6 + ww_sl_nlo_13p6 + ww_fh_nlo_13p6) * ww_k_nlo_to_nnlo,
     },
 )
 
@@ -2591,8 +2829,8 @@ ww_dl = ww_qqbar.add_process(
     id=8310,
     xsecs={
         13: ww.get_xsec(13) * const.br_ww.dl,  # value around 12.6 for comparison to GenXSecAnalyzer NLO result
-        # 13.6: XSDB NLO 11.79 pb × k=1.14 (NLO→NNLO) = 13.4406 pb
-        13.6: Number(11.79, {"tot": 0.004216}) * 1.14,
+        # 13.6: XSDB NLO × k(NLO→NNLO)
+        13.6: ww_dl_nlo_13p6 * ww_k_nlo_to_nnlo,
     },
 )
 
@@ -2607,8 +2845,8 @@ ww_sl = ww_qqbar.add_process(
     id=8320,
     xsecs={
         13: ww.get_xsec(13) * const.br_ww.sl,  # value around 50.06 for comparison to GenXSecAnalyzer NLO result
-        # 13.6: XSDB NLO 48.94 pb × k=1.14 (NLO→NNLO) = 55.7916 pb
-        13.6: Number(48.94, {"tot": 0.0175}) * 1.14,
+        # 13.6: XSDB NLO × k(NLO→NNLO)
+        13.6: ww_sl_nlo_13p6 * ww_k_nlo_to_nnlo,
     },
 )
 
@@ -2623,49 +2861,53 @@ ww_fh = ww_qqbar.add_process(
     id=8330,
     xsecs={
         13: ww.get_xsec(13) * const.br_ww.fh,  # value around 53.94 for comparison to GenXSecAnalyzer NLO result
-        # 13.6: XSDB NLO 50.79 pb × k=1.14 (NLO→NNLO) = 57.9006 pb
-        13.6: Number(50.79, {"tot": 0.01816}) * 1.14,
+        # 13.6: XSDB NLO × k(NLO→NNLO)
+        13.6: ww_fh_nlo_13p6 * ww_k_nlo_to_nnlo,
     },
 )
 
-# ggWW: each decay mode normalized independently by its LO MCFM value × k=1.41
+# ggWW: each decay mode normalized independently by its LO MCFM value × k(LO→NLO)
 # LO XS values in fb from XSDB for individual mcfm samples (XSDB mistakenly lists as pb; MCFM outputs in fb)
-# k=1.41 (LO→NLO) from arXiv:1511.08617 (Caola et al., Phys. Lett. B 754 (2016) 275)
 # See also CMS AN-2023/179.
 #
 # NOTE on same-flavor vs different-flavor:
-# MCFM gridpacks give the same XS (49.63 fb) for all channels (per-sample).
-# Same-flavor (ee, μμ, ττ): 1 sample per pair → XS = 49.63 fb × k
-# Different-flavor (eμ, eτ, μτ): 2 samples per pair (e.g., ENuMuNu + MuNuENu) → XS = 2 × 49.63 fb × k
-# Total ggWW→2l2ν = 3×69.9783 + 3×139.9566 = 629.8047 fb
+# MCFM gridpacks give the same XS for all channels (per-sample).
+# Same-flavor (ee, μμ, ττ): 1 sample per pair → XS = mcfm_lo × k
+# Different-flavor (eμ, eτ, μτ): 2 samples per pair (e.g., ENuMuNu + MuNuENu) → XS = 2 × mcfm_lo × k
+# Total ggWW→2l2ν = (same + diff) × n_leps
+
+# MCFM LO value (pb, converted from fb) — same for all channels at 13.6 TeV
+gg_ww_mcfm_lo_13p6 = Number(49.63e-03)  # 49.63 fb from XSDB
+
+# per-channel: same-flavor = 1× and different-flavor = 2× (two sample orderings)
+gg_ww_same_13p6 = gg_ww_mcfm_lo_13p6 * ww_gg_k_lo_to_nlo
+gg_ww_diff_13p6 = 2 * gg_ww_mcfm_lo_13p6 * ww_gg_k_lo_to_nlo
+
 ww_gg = ww.add_process(
     name="ww_gg",
     id=8380,
     label=r"$gg \rightarrow WW$",
     xsecs={
-        # sum of ggWW decay modes: 13.6 TeV: 3×69.9783 + 3×139.9566 = 629.8047 fb
-        13.6: Number(629.8047e-03),
+        # sum of ggWW decay modes: (same + diff) × n_leps
+        13.6: (gg_ww_same_13p6 + gg_ww_diff_13p6) * const.n_leps,
     },
 )
 
-# same-flavor channels: 49.63 fb × k=1.41 = 69.9783 fb each
 ww_wenu_wenu = ww_gg.add_process(
     name="ww_wenu_wenu",
     id=8311,
     xsecs={
         13: ww.get_xsec(13) * const.br_ww.enuenu,
-        13.6: Number(49.63e-03) * 1.41,  # LO MCFM 49.63 fb × k=1.41 (same-flavor, 1 sample)
+        13.6: gg_ww_same_13p6,  # same-flavor, 1 sample
     },
 )
 
-# different-flavor channels: 2 × 49.63 fb × k=1.41 = 139.9566 fb each
-# factor 2 from combining two ordering samples (ENuMuNu + MuNuENu)
 ww_wenu_wmnu = ww_gg.add_process(
     name="ww_wenu_wmnu",
     id=8312,
     xsecs={
         13: ww.get_xsec(13) * const.br_ww.enumnu,
-        13.6: Number(2 * 49.63e-03) * 1.41,  # LO MCFM 2×49.63 fb × k=1.41 (different-flavor, 2 samples)
+        13.6: gg_ww_diff_13p6,  # different-flavor, 2 samples (ENuMuNu + MuNuENu)
     },
 )
 
@@ -2674,7 +2916,7 @@ ww_wenu_wtnu = ww_gg.add_process(
     id=8313,
     xsecs={
         13: ww.get_xsec(13) * const.br_ww.enutnu,
-        13.6: Number(2 * 49.63e-03) * 1.41,  # LO MCFM 2×49.63 fb × k=1.41 (different-flavor, 2 samples)
+        13.6: gg_ww_diff_13p6,  # different-flavor, 2 samples
     },
 )
 
@@ -2683,7 +2925,7 @@ ww_wmnu_wmnu = ww_gg.add_process(
     id=8314,
     xsecs={
         13: ww.get_xsec(13) * const.br_ww.mnumnu,
-        13.6: Number(49.63e-03) * 1.41,  # LO MCFM 49.63 fb × k=1.41 (same-flavor, 1 sample)
+        13.6: gg_ww_same_13p6,  # same-flavor, 1 sample
     },
 )
 
@@ -2692,7 +2934,7 @@ ww_wmnu_wtnu = ww_gg.add_process(
     id=8315,
     xsecs={
         13: ww.get_xsec(13) * const.br_ww.mnutnu,
-        13.6: Number(2 * 49.63e-03) * 1.41,  # LO MCFM 2×49.63 fb × k=1.41 (different-flavor, 2 samples)
+        13.6: gg_ww_diff_13p6,  # different-flavor, 2 samples
     },
 )
 
@@ -2701,7 +2943,7 @@ ww_wtnu_wtnu = ww_gg.add_process(
     id=8316,
     xsecs={
         13: ww.get_xsec(13) * const.br_ww.tnutnu,
-        13.6: Number(49.63e-03) * 1.41,  # LO MCFM 49.63 fb × k=1.41 (same-flavor, 1 sample)
+        13.6: gg_ww_same_13p6,  # same-flavor, 1 sample
     },
 )
 
