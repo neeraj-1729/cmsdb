@@ -12,118 +12,7 @@ from order import DatasetInfo
 # Drell-Yan, amcatnlo
 #
 
-cpn.add_dataset(
-    name="dy_m50toinf_1j_pt40to100_amcatnlo",
-    id=15300236,
-    processes=[procs.dy_m50toinf_1j_pt40to100],
-    keys=[
-        "/DYto2L-2Jets_Bin-1J-MLL-50-PTLL-40to100_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v3/NANOAODSIM",  # noqa
-    ],
-    n_files=3_045,
-    n_events=479_655_476,
-)
-
-cpn.add_dataset(
-    name="dy_m50toinf_1j_pt100to200_amcatnlo",
-    id=15304428,
-    processes=[procs.dy_m50toinf_1j_pt100to200],
-    keys=[
-        "/DYto2L-2Jets_Bin-1J-MLL-50-PTLL-100to200_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa
-    ],
-    n_files=355,
-    n_events=227_319_605,
-)
-
-cpn.add_dataset(
-    name="dy_m50toinf_1j_pt200to400_amcatnlo",
-    id=15304451,
-    processes=[procs.dy_m50toinf_1j_pt200to400],
-    keys=[
-        "/DYto2L-2Jets_Bin-1J-MLL-50-PTLL-200to400_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa
-    ],
-    n_files=54,
-    n_events=22_383_959,
-)
-
-cpn.add_dataset(
-    name="dy_m50toinf_1j_pt400to600_amcatnlo",
-    id=15304493,
-    processes=[procs.dy_m50toinf_1j_pt400to600],
-    keys=[
-        "/DYto2L-2Jets_Bin-1J-MLL-50-PTLL-400to600_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa
-    ],
-    n_files=58,
-    n_events=10_404_540,
-)
-
-cpn.add_dataset(
-    name="dy_m50toinf_1j_pt600toinf_amcatnlo",
-    id=15304449,
-    processes=[procs.dy_m50toinf_1j_pt600toinf],
-    keys=[
-        "/DYto2L-2Jets_Bin-1J-MLL-50-PTLL-600_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa
-    ],
-    n_files=42,
-    n_events=9_996_457,
-)
-
-cpn.add_dataset(
-    name="dy_m50toinf_2j_pt40to100_amcatnlo",
-    id=15300484,
-    processes=[procs.dy_m50toinf_2j_pt40to100],
-    keys=[
-        "/DYto2L-2Jets_Bin-2J-MLL-50-PTLL-40to100_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v3/NANOAODSIM",  # noqa
-    ],
-    n_files=1_787,
-    n_events=247_167_836,
-)
-
-cpn.add_dataset(
-    name="dy_m50toinf_2j_pt100to200_amcatnlo",
-    id=15296152,
-    processes=[procs.dy_m50toinf_2j_pt100to200],
-    keys=[
-        "/DYto2L-2Jets_Bin-2J-MLL-50-PTLL-100to200_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa
-    ],
-    n_files=389,
-    n_events=246_696_940,
-)
-
-cpn.add_dataset(
-    name="dy_m50toinf_2j_pt200to400_amcatnlo",
-    id=15304466,
-    processes=[procs.dy_m50toinf_2j_pt200to400],
-    keys=[
-        "/DYto2L-2Jets_Bin-2J-MLL-50-PTLL-200to400_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa
-    ],
-    n_files=139,
-    n_events=44_028_174,
-)
-
-cpn.add_dataset(
-    name="dy_m50toinf_2j_pt400to600_amcatnlo",
-    id=15304446,
-    processes=[procs.dy_m50toinf_2j_pt400to600],
-    keys=[
-        "/DYto2L-2Jets_Bin-2J-MLL-50-PTLL-400to600_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa
-    ],
-    n_files=47,
-    n_events=9_893_470,
-)
-
-cpn.add_dataset(
-    name="dy_m50toinf_2j_pt600toinf_amcatnlo",
-    id=15304548,
-    processes=[procs.dy_m50toinf_2j_pt600toinf],
-    keys=[
-        "/DYto2L-2Jets_Bin-2J-MLL-50-PTLL-600_TuneCP5_13p6TeV_amcatnloFXFX-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa
-    ],
-    n_files=50,
-    n_events=9_801_431,
-)
-
 # tautau filtered, inclusive and in jet bins
-
 cpn.add_dataset(
     name="dy_tautau_m50toinf_amcatnlo",
     id=15401531,
@@ -169,7 +58,6 @@ cpn.add_dataset(
 )
 
 # ee filtered, inclusive and in jet bins
-
 cpn.add_dataset(
     name="dy_ee_m50toinf_amcatnlo",
     id=15292625,
@@ -215,7 +103,6 @@ cpn.add_dataset(
 )
 
 # mumu filtered, inclusive and in jet bins
-
 cpn.add_dataset(
     name="dy_mumu_m50toinf_amcatnlo",
     id=15302208,
@@ -872,13 +759,13 @@ cpn.add_dataset(
 
 cpn.add_dataset(
     name="z_vbf_zll_m50toinf_madgraph",
-    id=15407645,
+    id=15515421,
     processes=[procs.z_vbf_zll_m50toinf],
     keys=[
-        "/VBFto2L_Bin-MLL-50_TuneCP5_13p6TeV_madgraph-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v3/NANOAODSIM",  # noqa
+        "/VBFto2L_Bin-MLL-50_TuneCP5_13p6TeV_madgraph-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v4/NANOAODSIM",  # noqa
     ],
-    n_files=395,
-    n_events=41_993_000,
+    n_files=207,
+    n_events=39_677_000,
 )
 
 #
