@@ -5,6 +5,10 @@
 
 Database of physics processes, cross sections and scientific constants as well as CMS-related campaign information on datasets.
 
+## Implicit units
+
+- Cross sections: *pb*
+
 ## Campaign names and descriptions
 
 | Name                                                                                                   | Postfix  | Tags                        | Notes                 |
