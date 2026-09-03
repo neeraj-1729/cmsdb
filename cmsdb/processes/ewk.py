@@ -88,7 +88,7 @@ __all__ = [  # noqa: F822
     "ewk",
     "ewk_wp_lnu_m50toinf", "ewk_wm_lnu_m50toinf", "ewk_z_ll_m50toinf",
     "vv",
-    "zz", "zz_qqbar", "zz_gg",
+    "zz", "qqzz", "ggzz",
     "zz_zqq_zll", "zz_zll_znunu", "zz_zll_zll", "zz_zqq_zqq", "zz_znunu_zqq",
     "zz_zee_zee", "zz_zee_zmm", "zz_zee_ztt", "zz_zmm_zmm", "zz_zmm_ztt", "zz_ztt_ztt",
     "wz", "wz_wlnu_zll", "wz_wqq_zll", "wz_wqq_zqq", "wz_wlnu_zqq",
@@ -99,10 +99,10 @@ __all__ = [  # noqa: F822
     "dyg_m50toinf_ptg200to400", "dyg_m50toinf_ptg400to600", "dyg_m50toinf_ptg600toinf",
     "dyg_m50toinf_ptg100toinf", "dyg_m50toinf_ptg200toinf", "dyg_m50toinf_ptg400toinf",
     "dyg_m4to50", "dyg_m4to50_ptg10to100", "dyg_m4to50_ptg100to200", "dyg_m4to50_ptg200toinf",
-    "ww", "ww_qqbar", "ww_gg",
+    "ww", "qqww", "ggww",
     "ww_dl", "ww_sl", "ww_fh",
     "ww_wenu_wenu", "ww_wenu_wmnu", "ww_wenu_wtnu", "ww_wmnu_wmnu", "ww_wmnu_wtnu", "ww_wtnu_wtnu",
-    "wpwp_jj",
+    "ww_ss_2j",
     "vvv",
     "zzz", "wzz", "wwz", "www",
 ]
@@ -113,7 +113,6 @@ from scinum import Number
 
 import cmsdb.constants as const
 from cmsdb.processes.stitching import get_stitched_dy_m50toinf_br, get_stitched_w_lnu_br
-from cmsdb.util import multiply_xsecs
 
 
 #
@@ -2259,8 +2258,8 @@ zz = vv.add_process(
 
 # qqZZ: each decay mode normalized independently by its NLO XSDB value × k=1.15
 # NLO XS values from XSDB for individual powheg/amcatnlo samples
-zz_qqbar = zz.add_process(
-    name="zz_qqbar",
+qqzz = zz.add_process(
+    name="qqzz",
     id=8170,
     label=r"$q\bar{q} \rightarrow ZZ$",
     xsecs={
@@ -2272,7 +2271,7 @@ zz_qqbar = zz.add_process(
     },
 )
 
-zz_zll_zll = zz_qqbar.add_process(
+zz_zll_zll = zz.add_process(
     name="zz_zll_zll",
     id=8130,
     xsecs={
@@ -2284,7 +2283,7 @@ zz_zll_zll = zz_qqbar.add_process(
     },
 )
 
-zz_zqq_zll = zz_qqbar.add_process(
+zz_zqq_zll = zz.add_process(
     name="zz_zqq_zll",
     id=8110,
     xsecs={
@@ -2300,7 +2299,7 @@ zz_zqq_zll = zz_qqbar.add_process(
     },
 )
 
-zz_zll_znunu = zz_qqbar.add_process(
+zz_zll_znunu = zz.add_process(
     name="zz_zll_znunu",
     id=8120,
     xsecs={
@@ -2318,7 +2317,7 @@ zz_zll_znunu = zz_qqbar.add_process(
     },
 )
 
-zz_znunu_zqq = zz_qqbar.add_process(
+zz_znunu_zqq = zz.add_process(
     name="zz_znunu_zqq",
     id=8150,
     xsecs={
@@ -2333,7 +2332,7 @@ zz_znunu_zqq = zz_qqbar.add_process(
     },
 )
 
-zz_zqq_zqq = zz_qqbar.add_process(
+zz_zqq_zqq = zz.add_process(
     name="zz_zqq_zqq",
     id=8140,
     xsecs={
@@ -2366,8 +2365,8 @@ gg_zz_lo_same_13p6 = Number(5.199467e-03)  # GluGlu2Zto4E / 4Mu / 4Tau, 13.6 TeV
 gg_zz_lo_diff_13 = Number(5.423e-03)       # GluGlu2Zto2E2Mu / 2E2Tau / 2Mu2Tau, 13 TeV
 gg_zz_lo_diff_13p6 = Number(10.610669e-03)  # GluGlu2Zto2E2Mu / 2E2Tau / 2Mu2Tau, 13.6 TeV
 
-zz_gg = zz.add_process(
-    name="zz_gg",
+ggzz = zz.add_process(
+    name="ggzz",
     id=8180,
     label=r"$gg \rightarrow ZZ$",
     xsecs={
@@ -2377,7 +2376,7 @@ zz_gg = zz.add_process(
     },
 )
 
-zz_zee_zee = zz_gg.add_process(
+zz_zee_zee = zz.add_process(
     name="zz_zee_zee",
     id=8160,
     xsecs={
@@ -2386,7 +2385,7 @@ zz_zee_zee = zz_gg.add_process(
     },
 )
 
-zz_zee_zmm = zz_gg.add_process(
+zz_zee_zmm = zz.add_process(
     name="zz_zee_zmm",
     id=8161,
     xsecs={
@@ -2395,7 +2394,7 @@ zz_zee_zmm = zz_gg.add_process(
     },
 )
 
-zz_zee_ztt = zz_gg.add_process(
+zz_zee_ztt = zz.add_process(
     name="zz_zee_ztt",
     id=8162,
     xsecs={
@@ -2404,7 +2403,7 @@ zz_zee_ztt = zz_gg.add_process(
     },
 )
 
-zz_zmm_zmm = zz_gg.add_process(
+zz_zmm_zmm = zz.add_process(
     name="zz_zmm_zmm",
     id=8163,
     xsecs={
@@ -2413,7 +2412,7 @@ zz_zmm_zmm = zz_gg.add_process(
     },
 )
 
-zz_zmm_ztt = zz_gg.add_process(
+zz_zmm_ztt = zz.add_process(
     name="zz_zmm_ztt",
     id=8164,
     xsecs={
@@ -2422,7 +2421,7 @@ zz_zmm_ztt = zz_gg.add_process(
     },
 )
 
-zz_ztt_ztt = zz_gg.add_process(
+zz_ztt_ztt = zz.add_process(
     name="zz_ztt_ztt",
     id=8165,
     xsecs={
@@ -2484,7 +2483,7 @@ wz_wqq_zll = wz.add_process(
     name="wz_wqq_zll",
     id=8220,
     xsecs={
-        13: multiply_xsecs(wz, const.br_w.had * const.br_z.clep)[13],
+        13: wz.get_xsec(13) * const.br_w.had * const.br_z.clep,
         # XSDB NLO (powheg) 7.568 pb × k(NLO POWHEG -> NNLO QCD x NLO EW)
         # https://xsecdb-xsdb-official.app.cern.ch/xsdb/ DAS=WZto2L2Q_TuneCP5_13p6TeV_powheg-pythia8
         # verified from CMS AN-2023/179
@@ -2497,7 +2496,7 @@ wz_wqq_zqq = wz.add_process(
     name="wz_wqq_zqq",
     id=8240,
     xsecs={
-        13: multiply_xsecs(wz, const.br_w.had * const.br_z.qq)[13],
+        13: wz.get_xsec(13) * const.br_w.had * const.br_z.qq,
         # XSDB labels this as "LO" but it is actually NLO (amcatnloFXFX = NLO + FxFx jet merging):
         #   - 21% negative weights (impossible at LO)
         #   - FxFx matching efficiency ~63% (before: 39.31 pb, after: 24.97 pb)
@@ -2515,7 +2514,7 @@ wz_wlnu_zqq = wz.add_process(
     name="wz_wlnu_zqq",
     id=8230,
     xsecs={
-        13: multiply_xsecs(wz, const.br_w.lep * const.br_z.qq)[13],
+        13: wz.get_xsec(13) * const.br_w.lep * const.br_z.qq,
         # XSDB NLO (powheg) 15.87 pb × k(NLO POWHEG -> NNLO QCD x NLO EW)
         # https://xsecdb-xsdb-official.app.cern.ch/xsdb/ DAS=WZtoLNu2Q_TuneCP5_13p6TeV_powheg-pythia8
         # GenXSecAnalyzer (Run3Summer22EEMiniAODv4, 1M events): 15.87 ± 0.007874 pb — exact match with XSDB
@@ -2807,8 +2806,8 @@ ww_dl_nlo_13p6 = Number(11.79, {"tot": 0.004216})
 ww_sl_nlo_13p6 = Number(48.94, {"tot": 0.0175})
 ww_fh_nlo_13p6 = Number(50.79, {"tot": 0.01816})
 
-ww_qqbar = ww.add_process(
-    name="ww_qqbar",
+qqww = ww.add_process(
+    name="qqww",
     id=8370,
     label=r"$q\bar{q} \rightarrow WW$",
     xsecs={
@@ -2824,7 +2823,7 @@ ww_qqbar = ww.add_process(
 # Log for GenXSecAnalyzer of
 # WWTo2L2Nu_TuneCP5_13TeV-powheg-pythia8 (Summer20UL16, NLO) with Number(11.09, {"tot": 0.00704})
 # also available, but not used here
-ww_dl = ww_qqbar.add_process(
+ww_dl = ww.add_process(
     name="ww_dl",
     id=8310,
     xsecs={
@@ -2840,7 +2839,7 @@ ww_dl = ww_qqbar.add_process(
 # Log for GenXSecAnalyzer of
 # for WWTo1L1Nu2Q_4f_TuneCP5_13TeV-amcatnloFXFX-pythia8 (Summer20UL16, NLO) -> value : Number(50.94, {"tot": 0.042})
 # also available, but not used here
-ww_sl = ww_qqbar.add_process(
+ww_sl = ww.add_process(
     name="ww_sl",
     id=8320,
     xsecs={
@@ -2856,7 +2855,7 @@ ww_sl = ww_qqbar.add_process(
 # Log for GenXSecAnalyzer of
 # for WWTo4Q_4f_TuneCP5_13TeV-amcatnloFXFX-pythia8 (Summer20UL16, NLO) -> value : Number(51.53, {"tot": 0.04349})
 # also available, but not used here
-ww_fh = ww_qqbar.add_process(
+ww_fh = ww.add_process(
     name="ww_fh",
     id=8330,
     xsecs={
@@ -2883,8 +2882,8 @@ gg_ww_mcfm_lo_13p6 = Number(49.63e-03)  # 49.63 fb from XSDB
 gg_ww_same_13p6 = gg_ww_mcfm_lo_13p6 * ww_gg_k_lo_to_nlo
 gg_ww_diff_13p6 = 2 * gg_ww_mcfm_lo_13p6 * ww_gg_k_lo_to_nlo
 
-ww_gg = ww.add_process(
-    name="ww_gg",
+ggww = ww.add_process(
+    name="ggww",
     id=8380,
     label=r"$gg \rightarrow WW$",
     xsecs={
@@ -2893,7 +2892,7 @@ ww_gg = ww.add_process(
     },
 )
 
-ww_wenu_wenu = ww_gg.add_process(
+ww_wenu_wenu = ww.add_process(
     name="ww_wenu_wenu",
     id=8311,
     xsecs={
@@ -2902,7 +2901,7 @@ ww_wenu_wenu = ww_gg.add_process(
     },
 )
 
-ww_wenu_wmnu = ww_gg.add_process(
+ww_wenu_wmnu = ww.add_process(
     name="ww_wenu_wmnu",
     id=8312,
     xsecs={
@@ -2911,7 +2910,7 @@ ww_wenu_wmnu = ww_gg.add_process(
     },
 )
 
-ww_wenu_wtnu = ww_gg.add_process(
+ww_wenu_wtnu = ww.add_process(
     name="ww_wenu_wtnu",
     id=8313,
     xsecs={
@@ -2920,7 +2919,7 @@ ww_wenu_wtnu = ww_gg.add_process(
     },
 )
 
-ww_wmnu_wmnu = ww_gg.add_process(
+ww_wmnu_wmnu = ww.add_process(
     name="ww_wmnu_wmnu",
     id=8314,
     xsecs={
@@ -2929,7 +2928,7 @@ ww_wmnu_wmnu = ww_gg.add_process(
     },
 )
 
-ww_wmnu_wtnu = ww_gg.add_process(
+ww_wmnu_wtnu = ww.add_process(
     name="ww_wmnu_wtnu",
     id=8315,
     xsecs={
@@ -2938,7 +2937,7 @@ ww_wmnu_wtnu = ww_gg.add_process(
     },
 )
 
-ww_wtnu_wtnu = ww_gg.add_process(
+ww_wtnu_wtnu = ww.add_process(
     name="ww_wtnu_wtnu",
     id=8316,
     xsecs={
@@ -2948,8 +2947,8 @@ ww_wtnu_wtnu = ww_gg.add_process(
 )
 
 # same-sign WW (EWK+QCD)
-wpwp_jj = Process(
-    name="wpwp_jj",
+ww_ss_2j = Process(
+    name="ww_ss_2j",
     id=8400,
     label=r"$W^{\pm}W^{\pm}jj$",
     xsecs={

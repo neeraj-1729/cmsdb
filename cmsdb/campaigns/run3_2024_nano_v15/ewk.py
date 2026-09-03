@@ -911,9 +911,9 @@ cpn.add_dataset(
 
 # same-sign WW
 cpn.add_dataset(
-    name="wpwp_jj_madgraph",
+    name="ww_ss_2j_madgraph",
     id=15515111,
-    processes=[procs.wpwp_jj],
+    processes=[procs.ww_ss_2j],
     keys=[
         "/WpWpJJ-EWK-QCD_TuneCP5_13p6TeV_madgraph-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa
     ],
