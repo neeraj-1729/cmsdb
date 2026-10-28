@@ -17,7 +17,7 @@ from scripts.get_das_info import get_das_info
 
 class TestCampaigns(unittest.TestCase):
     # list of generator names to check for in dataset names
-    generator_names = ("powheg", "madgraph", "amcatnlo", "pythia")
+    generator_names = ("powheg", "madgraph", "amcatnlo", "pythia", "mcfm")
 
     # boolean flag whether to check consistency between dataset and process names
     check_proc_name: bool = False

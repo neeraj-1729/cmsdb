@@ -841,9 +841,9 @@ cpn.add_dataset(
 
 # ggWW dilepton decay modes (MCFM LO)
 cpn.add_dataset(
-    name="ww_wenu_wenu_pythia",
+    name="ggww_wenu_wenu_mcfm",
     id=15349213,
-    processes=[procs.ww_wenu_wenu],
+    processes=[procs.ggww_wenu_wenu],
     keys=[
         "/GluGluWWto2E2Nu_TuneCP5_13p6TeV_mcfm-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa: E501
     ],
@@ -852,9 +852,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="ww_wenu_wmnu_pythia",
+    name="ggww_wenu_wmnu_mcfm",
     id=15350676,
-    processes=[procs.ww_wenu_wmnu],
+    processes=[procs.ggww_wenu_wmnu],
     keys=[
         "/GluGluWWtoENuMuNu_TuneCP5_13p6TeV_mcfm-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa: E501
         "/GluGluWWtoMuNuENu_TuneCP5_13p6TeV_mcfm-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa: E501
@@ -864,9 +864,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="ww_wenu_wtnu_pythia",
+    name="ggww_wenu_wtnu_mcfm",
     id=15348543,
-    processes=[procs.ww_wenu_wtnu],
+    processes=[procs.ggww_wenu_wtnu],
     keys=[
         "/GluGluWWtoENuTauNu_TuneCP5_13p6TeV_mcfm-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa: E501
         "/GluGluWWtoTauNuENu_TuneCP5_13p6TeV_mcfm-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa: E501
@@ -876,9 +876,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="ww_wmnu_wmnu_pythia",
+    name="ggww_wmnu_wmnu_mcfm",
     id=15349364,
-    processes=[procs.ww_wmnu_wmnu],
+    processes=[procs.ggww_wmnu_wmnu],
     keys=[
         "/GluGluWWto2Mu2Nu_TuneCP5_13p6TeV_mcfm-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa: E501
     ],
@@ -887,9 +887,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="ww_wmnu_wtnu_pythia",
+    name="ggww_wmnu_wtnu_mcfm",
     id=15349359,
-    processes=[procs.ww_wmnu_wtnu],
+    processes=[procs.ggww_wmnu_wtnu],
     keys=[
         "/GluGluWWtoMuNuTauNu_TuneCP5_13p6TeV_mcfm-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa: E501
         "/GluGluWWtoTauNuMuNu_TuneCP5_13p6TeV_mcfm-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa: E501
@@ -899,9 +899,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="ww_wtnu_wtnu_pythia",
+    name="ggww_wtnu_wtnu_mcfm",
     id=15349363,
-    processes=[procs.ww_wtnu_wtnu],
+    processes=[procs.ggww_wtnu_wtnu],
     keys=[
         "/GluGluWWto2Tau2Nu_TuneCP5_13p6TeV_mcfm-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa: E501
     ],
@@ -1024,9 +1024,9 @@ cpn.add_dataset(
 
 # further zz decay modes with specific leptons
 cpn.add_dataset(
-    name="zz_zee_zee_pythia",
+    name="ggzz_zee_zee_mcfm",
     id=15415633,
-    processes=[procs.zz_zee_zee],
+    processes=[procs.ggzz_zee_zee],
     keys=[
         "/GluGlu2Zto4E_TuneCP5_13p6TeV_mcfm-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa: E501
     ],
@@ -1035,9 +1035,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="zz_zee_zmm_pythia",
+    name="ggzz_zee_zmm_mcfm",
     id=15415905,
-    processes=[procs.zz_zee_zmm],
+    processes=[procs.ggzz_zee_zmm],
     keys=[
         "/GluGlu2Zto2E2Mu_TuneCP5_13p6TeV_mcfm-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa: E501
     ],
@@ -1046,9 +1046,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="zz_zee_ztt_pythia",
+    name="ggzz_zee_ztt_mcfm",
     id=15414868,
-    processes=[procs.zz_zee_ztt],
+    processes=[procs.ggzz_zee_ztt],
     keys=[
         "/GluGlu2Zto2E2Tau_TuneCP5_13p6TeV_mcfm-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa: E501
     ],
@@ -1057,9 +1057,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="zz_zmm_zmm_pythia",
+    name="ggzz_zmm_zmm_mcfm",
     id=15415766,
-    processes=[procs.zz_zmm_zmm],
+    processes=[procs.ggzz_zmm_zmm],
     keys=[
         "/GluGlu2Zto4Mu_TuneCP5_13p6TeV_mcfm-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa: E501
     ],
@@ -1068,9 +1068,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="zz_zmm_ztt_pythia",
+    name="ggzz_zmm_ztt_mcfm",
     id=15415743,
-    processes=[procs.zz_zmm_ztt],
+    processes=[procs.ggzz_zmm_ztt],
     keys=[
         "/GluGlu2Zto2Mu2Tau_TuneCP5_13p6TeV_mcfm-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa: E501
     ],
@@ -1079,9 +1079,9 @@ cpn.add_dataset(
 )
 
 cpn.add_dataset(
-    name="zz_ztt_ztt_pythia",
+    name="ggzz_ztt_ztt_mcfm",
     id=15415794,
-    processes=[procs.zz_ztt_ztt],
+    processes=[procs.ggzz_ztt_ztt],
     keys=[
         "/GluGlu2Zto4Tau_TuneCP5_13p6TeV_mcfm-pythia8/RunIII2024Summer24NanoAODv15-150X_mcRun3_2024_realistic_v2-v2/NANOAODSIM",  # noqa: E501
     ],

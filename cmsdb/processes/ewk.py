@@ -91,6 +91,8 @@ __all__ = [  # noqa: F822
     "zz", "qqzz", "ggzz",
     "zz_zqq_zll", "zz_zll_znunu", "zz_zll_zll", "zz_zqq_zqq", "zz_znunu_zqq",
     "zz_zee_zee", "zz_zee_zmm", "zz_zee_ztt", "zz_zmm_zmm", "zz_zmm_ztt", "zz_ztt_ztt",
+    "ggzz_zll_zll",
+    "ggzz_zee_zee", "ggzz_zee_zmm", "ggzz_zee_ztt", "ggzz_zmm_zmm", "ggzz_zmm_ztt", "ggzz_ztt_ztt",
     "wz", "wz_wlnu_zll", "wz_wqq_zll", "wz_wqq_zqq", "wz_wlnu_zqq",
     "wzg", "wzg_wlnu",
     "wg_wlnu",
@@ -102,6 +104,8 @@ __all__ = [  # noqa: F822
     "ww", "qqww", "ggww",
     "ww_dl", "ww_sl", "ww_fh",
     "ww_wenu_wenu", "ww_wenu_wmnu", "ww_wenu_wtnu", "ww_wmnu_wmnu", "ww_wmnu_wtnu", "ww_wtnu_wtnu",
+    "ggww_dl",
+    "ggww_wenu_wenu", "ggww_wenu_wmnu", "ggww_wenu_wtnu", "ggww_wmnu_wmnu", "ggww_wmnu_wtnu", "ggww_wtnu_wtnu",
     "ww_ss_2j",
     "vvv",
     "zzz", "wzz", "wwz", "www",
@@ -113,6 +117,7 @@ from scinum import Number
 
 import cmsdb.constants as const
 from cmsdb.processes.stitching import get_stitched_dy_m50toinf_br, get_stitched_w_lnu_br
+from cmsdb.util import multiply_xsecs
 
 
 #
@@ -2349,86 +2354,120 @@ zz_zqq_zqq = zz.add_process(
     },
 )
 
-# ggZZ: each decay mode normalized independently by its LO MCFM value × k=1.7
-# LO XS values in fb from XSDB for individual mcfm samples
-# See slides: https://indico.cern.ch/event/1677270/contributions/7200886/attachments/3317393/5938464/ZZXS.pdf
-#
-# Same-flavor modes (4e, 4μ, 4τ) have the same XSDB LO value;
-# different-flavor modes (2e2μ, 2e2τ, 2μ2τ) also share a common value.
-# Store these as variables to avoid repetition and make the origin clear.
-
-# XSDB LO values (in fb) for same-flavor ggZZ modes (GluGlu2Zto4L mcfm)
-gg_zz_lo_same_13 = Number(2.703e-03)    # GluGlu2Zto4E / 4Mu / 4Tau, 13 TeV
-gg_zz_lo_same_13p6 = Number(5.199467e-03)  # GluGlu2Zto4E / 4Mu / 4Tau, 13.6 TeV
-
-# XSDB LO values (in fb) for different-flavor ggZZ modes (GluGlu2Zto2L2L' mcfm)
-gg_zz_lo_diff_13 = Number(5.423e-03)       # GluGlu2Zto2E2Mu / 2E2Tau / 2Mu2Tau, 13 TeV
-gg_zz_lo_diff_13p6 = Number(10.610669e-03)  # GluGlu2Zto2E2Mu / 2E2Tau / 2Mu2Tau, 13.6 TeV
-
-ggzz = zz.add_process(
-    name="ggzz",
-    id=8180,
-    label=r"$gg \rightarrow ZZ$",
-    xsecs={
-        # sum of ggZZ decay modes: 3 same-flavor + 3 different-flavor
-        13: (gg_zz_lo_same_13 + gg_zz_lo_diff_13) * const.n_leps,
-        13.6: (gg_zz_lo_same_13p6 + gg_zz_lo_diff_13p6) * const.n_leps,
-    },
-)
-
 zz_zee_zee = zz.add_process(
     name="zz_zee_zee",
     id=8160,
-    xsecs={
-        13: gg_zz_lo_same_13,
-        13.6: gg_zz_lo_same_13p6,
-    },
+    xsecs=multiply_xsecs(zz, const.br_zz.eeee),
 )
 
 zz_zee_zmm = zz.add_process(
     name="zz_zee_zmm",
     id=8161,
-    xsecs={
-        13: gg_zz_lo_diff_13,
-        13.6: gg_zz_lo_diff_13p6,
-    },
+    xsecs=multiply_xsecs(zz, const.br_zz.eemm),
 )
 
 zz_zee_ztt = zz.add_process(
     name="zz_zee_ztt",
     id=8162,
-    xsecs={
-        13: gg_zz_lo_diff_13,
-        13.6: gg_zz_lo_diff_13p6,
-    },
+    xsecs=multiply_xsecs(zz, const.br_zz.eett),
 )
 
 zz_zmm_zmm = zz.add_process(
     name="zz_zmm_zmm",
     id=8163,
-    xsecs={
-        13: gg_zz_lo_same_13,
-        13.6: gg_zz_lo_same_13p6,
-    },
+    xsecs=multiply_xsecs(zz, const.br_zz.mmmm),
 )
 
 zz_zmm_ztt = zz.add_process(
     name="zz_zmm_ztt",
     id=8164,
-    xsecs={
-        13: gg_zz_lo_diff_13,
-        13.6: gg_zz_lo_diff_13p6,
-    },
+    xsecs=multiply_xsecs(zz, const.br_zz.mmtt),
 )
 
 zz_ztt_ztt = zz.add_process(
     name="zz_ztt_ztt",
     id=8165,
+    xsecs=multiply_xsecs(zz, const.br_zz.tttt),
+)
+
+# ggZZ: loop-induced gluon fusion, normalized from the MCFM LO cross sections of the individual 4l samples
+# times k(LO→NLO) = 1.7, see slides: https://indico.cern.ch/event/1677270/contributions/7200886/attachments/3317393/5938464/ZZXS.pdf  # noqa
+#
+# LO values are taken from the MCFM output ("Cross-section is", in fb) stored in the gridpacks, which agree with McM;
+# XSDB lists the 13.6 TeV samples with values that already include k = 1.7, so they are not used here
+# 13 TeV: GluGluToContinToZZTo{4e,4mu,4tau,2e2mu,2e2tau,2mu2tau}_TuneCP5_13TeV-mcfm701-pythia8 (Summer20UL)
+#   McM: HIG-RunIISummer20UL16wmLHEGEN-00363 to -00370
+#   cuts: m(ll) > 2.5 GeV, m(4l) > 70 GeV, pT(l) > 3 GeV, |eta(l)| < 2.7
+# 13.6 TeV: GluGlu2Zto{4E,4Mu,4Tau,2E2Mu,2E2Tau,2Mu2Tau}_TuneCP5_13p6TeV_mcfm-pythia8 (Summer24)
+#   McM: HIG-RunIII2024Summer24wmLHEGS-00797 to -00802
+#   cuts: m(ll) > 2.5 GeV, m(4l) > 70 GeV, no lepton cuts (makecuts = false), hence the larger values
+gg_zz_4l_lo = {
+    # 4e, 4mu, 4tau, 2e2mu, 2e2tau, 2mu2tau
+    13: [1.6175e-3, 1.59718e-3, 1.62639e-3, 3.29188e-3, 3.29395e-3, 3.29493e-3],
+    13.6: [3.05851e-3, 3.03575e-3, 3.03575e-3, 6.11513e-3, 6.24157e-3, 6.24157e-3],
+}
+
+# the inclusive cross section is obtained by dividing the sum over all 4l channels by BR(ZZ→4l), and decay modes
+# are derived from it via Z branching ratios; as the samples contain off-shell Z/γ* contributions within the above
+# phase space, this is an effective inclusive cross section
+ggzz = zz.add_process(
+    name="ggzz",
+    id=8180,
+    label=r"$gg \rightarrow ZZ$",
     xsecs={
-        13: gg_zz_lo_same_13,
-        13.6: gg_zz_lo_same_13p6,
+        ecm: Number(sum(lo_xsecs)) * zz_gg_k_lo_to_nlo / const.br_zz.llll
+        for ecm, lo_xsecs in gg_zz_4l_lo.items()
     },
 )
+
+ggzz_zll_zll = ggzz.add_process(
+    name="ggzz_zll_zll",
+    id=8181,
+    xsecs=multiply_xsecs(ggzz, const.br_zz.llll),
+)
+ggzz_zll_zll.add_parent_process(zz_zll_zll)
+
+ggzz_zee_zee = ggzz_zll_zll.add_process(
+    name="ggzz_zee_zee",
+    id=8182,
+    xsecs=multiply_xsecs(ggzz, const.br_zz.eeee),
+)
+ggzz_zee_zee.add_parent_process(zz_zee_zee)
+
+ggzz_zee_zmm = ggzz_zll_zll.add_process(
+    name="ggzz_zee_zmm",
+    id=8183,
+    xsecs=multiply_xsecs(ggzz, const.br_zz.eemm),
+)
+ggzz_zee_zmm.add_parent_process(zz_zee_zmm)
+
+ggzz_zee_ztt = ggzz_zll_zll.add_process(
+    name="ggzz_zee_ztt",
+    id=8184,
+    xsecs=multiply_xsecs(ggzz, const.br_zz.eett),
+)
+ggzz_zee_ztt.add_parent_process(zz_zee_ztt)
+
+ggzz_zmm_zmm = ggzz_zll_zll.add_process(
+    name="ggzz_zmm_zmm",
+    id=8185,
+    xsecs=multiply_xsecs(ggzz, const.br_zz.mmmm),
+)
+ggzz_zmm_zmm.add_parent_process(zz_zmm_zmm)
+
+ggzz_zmm_ztt = ggzz_zll_zll.add_process(
+    name="ggzz_zmm_ztt",
+    id=8186,
+    xsecs=multiply_xsecs(ggzz, const.br_zz.mmtt),
+)
+ggzz_zmm_ztt.add_parent_process(zz_zmm_ztt)
+
+ggzz_ztt_ztt = ggzz_zll_zll.add_process(
+    name="ggzz_ztt_ztt",
+    id=8187,
+    xsecs=multiply_xsecs(ggzz, const.br_zz.tttt),
+)
+ggzz_ztt_ztt.add_parent_process(zz_ztt_ztt)
 
 # WZ inclusive NLO xsec values from https://arxiv.org/pdf/1105.0020.pdf v1
 wp_z_xsec = {
@@ -2865,86 +2904,114 @@ ww_fh = ww.add_process(
     },
 )
 
-# ggWW: each decay mode normalized independently by its LO MCFM value × k(LO→NLO)
-# LO XS values in fb from XSDB for individual mcfm samples (XSDB mistakenly lists as pb; MCFM outputs in fb)
-# See also CMS AN-2023/179.
+ww_wenu_wenu = ww_dl.add_process(
+    name="ww_wenu_wenu",
+    id=8311,
+    xsecs=multiply_xsecs(ww, const.br_ww.enuenu),
+)
+
+ww_wenu_wmnu = ww_dl.add_process(
+    name="ww_wenu_wmnu",
+    id=8312,
+    xsecs=multiply_xsecs(ww, const.br_ww.enumnu),
+)
+
+ww_wenu_wtnu = ww_dl.add_process(
+    name="ww_wenu_wtnu",
+    id=8313,
+    xsecs=multiply_xsecs(ww, const.br_ww.enutnu),
+)
+
+ww_wmnu_wmnu = ww_dl.add_process(
+    name="ww_wmnu_wmnu",
+    id=8314,
+    xsecs=multiply_xsecs(ww, const.br_ww.mnumnu),
+)
+
+ww_wmnu_wtnu = ww_dl.add_process(
+    name="ww_wmnu_wtnu",
+    id=8315,
+    xsecs=multiply_xsecs(ww, const.br_ww.mnutnu),
+)
+
+ww_wtnu_wtnu = ww_dl.add_process(
+    name="ww_wtnu_wtnu",
+    id=8316,
+    xsecs=multiply_xsecs(ww, const.br_ww.tnutnu),
+)
+
+# ggWW: loop-induced gluon fusion, normalized from the MCFM LO cross section of the individual 2l2nu samples
+# times k(LO→NLO), see also CMS AN-2023/179
 #
-# NOTE on same-flavor vs different-flavor:
-# MCFM gridpacks give the same XS for all channels (per-sample).
-# Same-flavor (ee, μμ, ττ): 1 sample per pair → XS = mcfm_lo × k
-# Different-flavor (eμ, eτ, μτ): 2 samples per pair (e.g., ENuMuNu + MuNuENu) → XS = 2 × mcfm_lo × k
-# Total ggWW→2l2ν = (same + diff) × n_leps
+# LO value is taken from the MCFM output ("Cross-section is", in fb) stored in the gridpacks
+# 13.6 TeV: GluGluWWto{2E2Nu,ENuMuNu,...}_TuneCP5_13p6TeV_mcfm-pythia8 (Summer24)
+#   McM: HIG-RunIII2024Summer24wmLHEGS-00775 to -00783
+#   cuts: m(lnu) > 2.5 GeV, m(lnulnu) > 70 GeV, pT(l) > 3 GeV, |eta(l)| < 2.7
+# MCFM gives the same value for each of the 9 ordered channels (W+ → l nu, W- → l' nu with l, l' = e, mu, tau)
+gg_ww_2l2nu_lo = {
+    13.6: Number(49.6302e-3),
+}
 
-# MCFM LO value (pb, converted from fb) — same for all channels at 13.6 TeV
-gg_ww_mcfm_lo_13p6 = Number(49.63e-03)  # 49.63 fb from XSDB
-
-# per-channel: same-flavor = 1× and different-flavor = 2× (two sample orderings)
-gg_ww_same_13p6 = gg_ww_mcfm_lo_13p6 * ww_gg_k_lo_to_nlo
-gg_ww_diff_13p6 = 2 * gg_ww_mcfm_lo_13p6 * ww_gg_k_lo_to_nlo
-
+# the inclusive cross section is obtained by dividing the sum over all ordered channels by BR(WW→2l2nu), and decay
+# modes are derived from it via W branching ratios
 ggww = ww.add_process(
     name="ggww",
     id=8380,
     label=r"$gg \rightarrow WW$",
     xsecs={
-        # sum of ggWW decay modes: (same + diff) × n_leps
-        13.6: (gg_ww_same_13p6 + gg_ww_diff_13p6) * const.n_leps,
+        ecm: lo_xsec * const.n_leps**2 * ww_gg_k_lo_to_nlo / const.br_ww.dl
+        for ecm, lo_xsec in gg_ww_2l2nu_lo.items()
     },
 )
 
-ww_wenu_wenu = ww.add_process(
-    name="ww_wenu_wenu",
-    id=8311,
-    xsecs={
-        13: ww.get_xsec(13) * const.br_ww.enuenu,
-        13.6: gg_ww_same_13p6,  # same-flavor, 1 sample
-    },
+ggww_dl = ggww.add_process(
+    name="ggww_dl",
+    id=8381,
+    xsecs=multiply_xsecs(ggww, const.br_ww.dl),
 )
+ggww_dl.add_parent_process(ww_dl)
 
-ww_wenu_wmnu = ww.add_process(
-    name="ww_wenu_wmnu",
-    id=8312,
-    xsecs={
-        13: ww.get_xsec(13) * const.br_ww.enumnu,
-        13.6: gg_ww_diff_13p6,  # different-flavor, 2 samples (ENuMuNu + MuNuENu)
-    },
+ggww_wenu_wenu = ggww_dl.add_process(
+    name="ggww_wenu_wenu",
+    id=8382,
+    xsecs=multiply_xsecs(ggww, const.br_ww.enuenu),
 )
+ggww_wenu_wenu.add_parent_process(ww_wenu_wenu)
 
-ww_wenu_wtnu = ww.add_process(
-    name="ww_wenu_wtnu",
-    id=8313,
-    xsecs={
-        13: ww.get_xsec(13) * const.br_ww.enutnu,
-        13.6: gg_ww_diff_13p6,  # different-flavor, 2 samples
-    },
+ggww_wenu_wmnu = ggww_dl.add_process(
+    name="ggww_wenu_wmnu",
+    id=8383,
+    xsecs=multiply_xsecs(ggww, const.br_ww.enumnu),
 )
+ggww_wenu_wmnu.add_parent_process(ww_wenu_wmnu)
 
-ww_wmnu_wmnu = ww.add_process(
-    name="ww_wmnu_wmnu",
-    id=8314,
-    xsecs={
-        13: ww.get_xsec(13) * const.br_ww.mnumnu,
-        13.6: gg_ww_same_13p6,  # same-flavor, 1 sample
-    },
+ggww_wenu_wtnu = ggww_dl.add_process(
+    name="ggww_wenu_wtnu",
+    id=8384,
+    xsecs=multiply_xsecs(ggww, const.br_ww.enutnu),
 )
+ggww_wenu_wtnu.add_parent_process(ww_wenu_wtnu)
 
-ww_wmnu_wtnu = ww.add_process(
-    name="ww_wmnu_wtnu",
-    id=8315,
-    xsecs={
-        13: ww.get_xsec(13) * const.br_ww.mnutnu,
-        13.6: gg_ww_diff_13p6,  # different-flavor, 2 samples
-    },
+ggww_wmnu_wmnu = ggww_dl.add_process(
+    name="ggww_wmnu_wmnu",
+    id=8385,
+    xsecs=multiply_xsecs(ggww, const.br_ww.mnumnu),
 )
+ggww_wmnu_wmnu.add_parent_process(ww_wmnu_wmnu)
 
-ww_wtnu_wtnu = ww.add_process(
-    name="ww_wtnu_wtnu",
-    id=8316,
-    xsecs={
-        13: ww.get_xsec(13) * const.br_ww.tnutnu,
-        13.6: gg_ww_same_13p6,  # same-flavor, 1 sample
-    },
+ggww_wmnu_wtnu = ggww_dl.add_process(
+    name="ggww_wmnu_wtnu",
+    id=8386,
+    xsecs=multiply_xsecs(ggww, const.br_ww.mnutnu),
 )
+ggww_wmnu_wtnu.add_parent_process(ww_wmnu_wtnu)
+
+ggww_wtnu_wtnu = ggww_dl.add_process(
+    name="ggww_wtnu_wtnu",
+    id=8387,
+    xsecs=multiply_xsecs(ggww, const.br_ww.tnutnu),
+)
+ggww_wtnu_wtnu.add_parent_process(ww_wtnu_wtnu)
 
 # same-sign WW (EWK+QCD)
 ww_ss_2j = Process(
